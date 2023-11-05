@@ -78,6 +78,10 @@ class Plugins extends Screen
                         ->title('Plugin URL')
                         ->placeholder('https://spigotmc.org/plugins/myplugin')
                         ->help('The homepage for this plugin'),
+                    Input::make('modrinth_id')
+                        ->title('Modrinth Project ID')
+                        ->placeholder('RKp8fKrT')
+                        ->help('The Modrinth Project ID for this plugin'),
                     Input::make('current')
                         ->title('Current plugin version')
                         ->placeholder('1.19.3')
@@ -100,8 +104,7 @@ class Plugins extends Screen
             'name'          => 'required',
             'description'   => 'required',
             'source'        => 'required|url',
-            'current'       => 'required',
-            'in_use'        => 'accepted'
+            'current'       => 'required'
         ]);
 
         $input = $request->all();
@@ -114,7 +117,7 @@ class Plugins extends Screen
 
     public function refresh()
     {
-        Artisan::call('spigot:refresh');
+        Artisan::call('plugins:refresh');
         Toast::success('Refreshed plugin data!');
     }
 }

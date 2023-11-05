@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Facades\Modrinth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,6 +21,7 @@ use Illuminate\Support\Collection;
  * @property string      $description
  * @property string      $source
  * @property string      $latest
+ * @property string      $modrinth_id
  * @property bool        $in_use
  * @property string      $resource_id
  * @property Carbon      $created_at
@@ -36,6 +38,7 @@ class Plugin extends Model
         'source',
         'current',
         'latest',
+        'modrinth_id',
         'in_use'
     ];
 
@@ -69,8 +72,19 @@ class Plugin extends Model
         return false;
     }
 
-    public function updateLatestVersion(): Collection
+    public function updateLatestVersion(): void
     {
-        return Spigot::latestVersion($this->resourceId);
+        if ($this->modrinth_id !== null) {
+            $versions = Modrinth::versions($this->modrinth_id);
+            $latest = $versions->first();
+            $version = $latest['version_number'];
+        } else if ($this->isSpigotPlugin()) {
+            $latest = Spigot::latestVersion($this->resourceId);
+            $version = $latest->get('name');
+        }
+
+        $this->latest = $version;
+        $this->save();
+        $this->refresh();
     }
 }

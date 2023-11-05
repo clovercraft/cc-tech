@@ -5,21 +5,21 @@ namespace App\Console\Commands;
 use App\Models\Plugin;
 use Illuminate\Console\Command;
 
-class SpigotRefreshPlugins extends Command
+class RefreshPlugins extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'spigot:refresh';
+    protected $signature = 'plugins:refresh';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Refresh the latest data on each Spigot plugin';
+    protected $description = 'Refresh the latest data on each plugin';
 
     /**
      * Execute the console command.
@@ -32,12 +32,7 @@ class SpigotRefreshPlugins extends Command
         $this->info($plugins->count() . " plugins to refresh");
 
         foreach ($plugins as $plugin) {
-            if ($plugin->isSpigotPlugin()) {
-                $latest = $plugin->updateLatestVersion();
-                $version = $latest->get('name');
-                $plugin->latest = $version;
-                $plugin->save();
-            }
+            $plugin->updateLatestVersion();
         }
         $this->info('Updated all plugin data!');
         return Command::SUCCESS;
