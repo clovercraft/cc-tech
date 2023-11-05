@@ -39,6 +39,11 @@ class PlatformProvider extends OrchidServiceProvider
                 ->title('Navigation')
                 ->route(config('platform.index')),
 
+            Menu::make('Servers')
+                ->icon('bs.server')
+                ->route('platform.servers')
+                ->title('Technical Assets'),
+
             Menu::make('Plugins')
                 ->icon('bs.plugin')
                 ->route('platform.plugins'),
@@ -47,7 +52,7 @@ class PlatformProvider extends OrchidServiceProvider
                 ->icon('bs.people')
                 ->route('platform.systems.users')
                 ->permission('platform.systems.users')
-                ->title(__('Access Controls')),
+                ->title(__('Tool Admin')),
 
             Menu::make(__('Roles'))
                 ->icon('bs.shield')
@@ -68,6 +73,12 @@ class PlatformProvider extends OrchidServiceProvider
             ItemPermission::group(__('System'))
                 ->addPermission('platform.systems.roles', __('Roles'))
                 ->addPermission('platform.systems.users', __('Users')),
+
+            ItemPermission::group(__('Technical Assets'))
+                ->addPermission('tech.view',    __('View'))
+                ->addPermission('tech.create',  __('Create'))
+                ->addPermission('tech.edit',    __('Edit'))
+                ->addPermission('tech.delete',  __('Delete'))
         ];
     }
 }
