@@ -5,6 +5,12 @@ namespace App\Service;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 
+/**
+ * Modrinth Service
+ *
+ * Implements the Labrinth API to retrieve plugin data
+ * API Specification: https://docs.modrinth.com/api-spec
+ */
 class ModrinthService
 {
 

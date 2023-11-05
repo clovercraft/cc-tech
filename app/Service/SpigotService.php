@@ -5,6 +5,12 @@ namespace App\Service;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 
+/**
+ * Spigot Service
+ *
+ * Implements the API documented on Siget.org to retrieve plugin data
+ * API Specification: https://spiget.org/documentation
+ */
 class SpigotService
 {
 
