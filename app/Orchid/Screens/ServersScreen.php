@@ -4,7 +4,13 @@ namespace App\Orchid\Screens;
 
 use App\Models\Server;
 use App\Orchid\Layouts\ServersTableLayout;
+use Illuminate\Http\Request;
+use Orchid\Screen\Actions\ModalToggle;
+use Orchid\Screen\Fields\Input;
+use Orchid\Screen\Fields\Select;
+use Orchid\Screen\Layouts\Modal;
 use Orchid\Screen\Screen;
+use Orchid\Support\Facades\Layout;
 
 class ServersScreen extends Screen
 {
@@ -43,7 +49,12 @@ class ServersScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [];
+        return [
+            ModalToggle::make('Add Server')
+                ->modal('addServerModal')
+                ->method('saveServer')
+                ->icon('bs.plus'),
+        ];
     }
 
     /**
@@ -54,7 +65,48 @@ class ServersScreen extends Screen
     public function layout(): iterable
     {
         return [
-            ServersTableLayout::class
+            ServersTableLayout::class,
+            Layout::modal('addServerModal', [
+                Layout::rows([
+                    Input::make('name')
+                        ->title('Name')
+                        ->help('A friendly display name for this server')
+                        ->required(),
+                    Input::make('ip')
+                        ->title('IP Address')
+                        ->help('The connection IP for this server')
+                        ->required(),
+                    Select::make('type')
+                        ->title('Server Type')
+                        ->options([
+                            'vanilla'   => 'Vanilla',
+                            'forge'     => 'Forge',
+                            'fabric'    => 'Fabric'
+                        ])
+                        ->default('vanilla')
+                        ->required(),
+                    Input::make('current_version')
+                        ->title('Minecraft Version')
+                        ->help('The official Minecraft release version the server is running')
+                        ->required()
+                ])
+            ])
+                ->size(Modal::SIZE_LG)
+                ->title('Add Server')
+                ->applyButton('Save')
+                ->closeButton('Cancel'),
         ];
+    }
+
+    public function saveServer(Request $request)
+    {
+        $request->validate([
+            'name'  => 'required',
+            'ip'    => 'required',
+            'type'  => 'required|in:vanilla,forge,fabric'
+        ]);
+
+        $server = new Server($request->all());
+        $server->save();
     }
 }

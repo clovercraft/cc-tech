@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Orchid\Screen\AsSource;
 
 /**
  * Server Model
@@ -19,5 +21,16 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Server extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes, AsSource;
+
+    public const VANILLA    = 'vanilla';
+    public const FORGE      = 'forge';
+    public const FABRIC     = 'fabric';
+
+    protected $fillable = [
+        'name',
+        'ip',
+        'type',
+        'current_version'
+    ];
 }
