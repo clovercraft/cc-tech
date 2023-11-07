@@ -13,8 +13,6 @@ jobs:
     services:
       mysql:
         image: mysql:8.0
-        ports:
-          - 3306:3306
         env:
           MYSQL_ROOT_PASSWORD: testing
           MYSQL_DATABASE: testing
@@ -37,4 +35,4 @@ jobs:
     - name: Execute tests
       run: php artisan test
       env:
-          DB_HOST: mysql
+        DB_HOST: mysql
