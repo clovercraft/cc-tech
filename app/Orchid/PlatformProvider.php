@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid;
 
+use Illuminate\Support\Facades\Auth;
 use Orchid\Platform\Dashboard;
 use Orchid\Platform\ItemPermission;
 use Orchid\Platform\OrchidServiceProvider;
@@ -33,33 +34,52 @@ class PlatformProvider extends OrchidServiceProvider
      */
     public function menu(): array
     {
-        return [
+        $menu = collect([
             Menu::make('Get Started')
                 ->icon('bs.book')
                 ->title('Navigation')
                 ->route(config('platform.index')),
+        ]);
 
-            Menu::make('Servers')
-                ->icon('bs.server')
-                ->route('platform.servers')
-                ->title('Technical Assets'),
+        if (Auth::user()->hasAccess('tech.view')) {
+            $menu->push(
+                Menu::make('Servers')
+                    ->icon('bs.server')
+                    ->route('platform.servers')
+                    ->title('Technical Assets'),
 
-            Menu::make('Plugins')
-                ->icon('bs.plugin')
-                ->route('platform.plugins'),
+                Menu::make('Plugins')
+                    ->icon('bs.plugin')
+                    ->route('platform.plugins'),
+            );
+        }
 
-            Menu::make(__('Users'))
-                ->icon('bs.people')
-                ->route('platform.systems.users')
-                ->permission('platform.systems.users')
-                ->title(__('Tool Admin')),
+        if (Auth::user()->hasAccess('creds.view')) {
+            $menu->push(
+                Menu::make('Credentials')
+                    ->icon('bs.lock')
+                    ->route('platform.credentials')
+                    ->title('Secrets Manager')
+            );
+        }
 
-            Menu::make(__('Roles'))
-                ->icon('bs.shield')
-                ->route('platform.systems.roles')
-                ->permission('platform.systems.roles')
-                ->divider(),
-        ];
+        if (Auth::user()->hasAccess('platform.systems.users')) {
+            $menu->push(
+                Menu::make(__('Users'))
+                    ->icon('bs.people')
+                    ->route('platform.systems.users')
+                    ->permission('platform.systems.users')
+                    ->title(__('Tool Admin')),
+
+                Menu::make(__('Roles'))
+                    ->icon('bs.shield')
+                    ->route('platform.systems.roles')
+                    ->permission('platform.systems.roles')
+                    ->divider()
+            );
+        }
+
+        return $menu->toArray();
     }
 
     /**
@@ -78,7 +98,13 @@ class PlatformProvider extends OrchidServiceProvider
                 ->addPermission('tech.view',    __('View'))
                 ->addPermission('tech.create',  __('Create'))
                 ->addPermission('tech.edit',    __('Edit'))
-                ->addPermission('tech.delete',  __('Delete'))
+                ->addPermission('tech.delete',  __('Delete')),
+
+            ItemPermission::group(__('Credentials'))
+                ->addPermission('creds.view',    __('View'))
+                ->addPermission('creds.create',  __('Create'))
+                ->addPermission('creds.edit',    __('Edit'))
+                ->addPermission('creds.delete',  __('Delete')),
         ];
     }
 }
