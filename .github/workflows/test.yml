@@ -36,3 +36,5 @@ jobs:
       run: chmod -R 777 storage bootstrap/cache
     - name: Execute tests
       run: php artisan test
+      env:
+          DB_HOST: mysql
