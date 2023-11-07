@@ -21,7 +21,6 @@
         <env name="APP_ENV" value="testing"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_DRIVER" value="array"/>
-        <env name="DB_HOST" value="localhost"/>
         <env name="DB_DATABASE" value="testing"/>
         <env name="DB_USERNAME" value="sail"/>
         <env name="DB_PASSWORD" value="password"/>
