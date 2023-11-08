@@ -9,7 +9,7 @@ on:
 jobs:
   container-job:
     runs-on: ubuntu-latest
-    container: sail-8.2/app
+    container: laravelsail/php82-composer
     services:
       mysql:
         image: mysql:8.0
