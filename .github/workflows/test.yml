@@ -19,6 +19,8 @@ jobs:
           MYSQL_USERNAME: sail
           MYSQL_PASSWORD: password
     steps:
+    - name: 'Install MySql'
+      run: 'sudo apt update && sudo apt install -y php8.2-mysql'
     - name: 'Checkout code'
       uses: actions/checkout@v4
     - name: Copy .env
