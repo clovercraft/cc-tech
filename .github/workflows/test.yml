@@ -35,4 +35,4 @@ jobs:
     - name: Execute tests
       run: php artisan test
       env:
-        DB_HOST: mysql
+        DB_HOST: localhost
