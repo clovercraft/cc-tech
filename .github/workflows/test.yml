@@ -7,9 +7,9 @@ on:
     branches: [ "production" ]
 
 jobs:
-  laravel-tests:
-
+  container-job:
     runs-on: ubuntu-latest
+    container: sail-8.2/app
     services:
       mysql:
         image: mysql:8.0
@@ -19,9 +19,6 @@ jobs:
           MYSQL_USERNAME: sail
           MYSQL_PASSWORD: password
     steps:
-    - uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2'
     - name: 'Checkout code'
       uses: actions/checkout@v4
     - name: Copy .env
@@ -35,4 +32,4 @@ jobs:
     - name: Execute tests
       run: php artisan test
       env:
-        DB_HOST: localhost
+        DB_HOST: mysql
