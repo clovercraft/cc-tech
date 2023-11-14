@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Orchid\Layouts;
+namespace App\Orchid\Layouts\Servers;
 
+use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
@@ -41,7 +42,9 @@ class ServersTableLayout extends Table
             TD::make('type', 'Format'),
             TD::make('current_version', 'Version'),
             TD::make('')
-                ->render(fn ($server) => ModalToggle::make('view'))
+                ->render(fn ($server) => Link::make('view')
+                    ->route('platform.server.details', ['server' => $server])
+                    ->icon('bs.eye'))
         ];
     }
 }

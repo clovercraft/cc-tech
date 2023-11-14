@@ -3,20 +3,12 @@
 declare(strict_types=1);
 
 use App\Orchid\Screens\CredentialsScreen;
-use App\Orchid\Screens\Examples\ExampleActionsScreen;
-use App\Orchid\Screens\Examples\ExampleCardsScreen;
-use App\Orchid\Screens\Examples\ExampleChartsScreen;
-use App\Orchid\Screens\Examples\ExampleFieldsAdvancedScreen;
-use App\Orchid\Screens\Examples\ExampleFieldsScreen;
-use App\Orchid\Screens\Examples\ExampleGridScreen;
-use App\Orchid\Screens\Examples\ExampleLayoutsScreen;
-use App\Orchid\Screens\Examples\ExampleScreen;
-use App\Orchid\Screens\Examples\ExampleTextEditorsScreen;
 use App\Orchid\Screens\PlatformScreen;
-use App\Orchid\Screens\Plugins;
+use App\Orchid\Screens\PluginsScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
-use App\Orchid\Screens\ServersScreen;
+use App\Orchid\Screens\Servers\ServerDetailScreen;
+use App\Orchid\Screens\Servers\ServersScreen;
 use App\Orchid\Screens\User\UserEditScreen;
 use App\Orchid\Screens\User\UserListScreen;
 use App\Orchid\Screens\User\UserProfileScreen;
@@ -93,7 +85,13 @@ Route::screen('servers', ServersScreen::class)
         ->parent('platform.index')
         ->push(__('Servers'), route('platform.servers')));
 
-Route::screen('plugins', Plugins::class)
+Route::screen('servers/{server}', ServerDetailScreen::class)
+    ->name('platform.server.details')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.servers')
+        ->push(__('Detail View')));
+
+Route::screen('plugins', PluginsScreen::class)
     ->name('platform.plugins')
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')

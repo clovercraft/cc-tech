@@ -3,19 +3,21 @@
 namespace App\Orchid\Screens;
 
 use App\Models\Plugin;
-use App\Orchid\Layouts\PluginsTableLayout;
+use App\Models\Server;
+use App\Orchid\Layouts\Plugins\PluginsTableLayout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\CheckBox;
 use Orchid\Screen\Fields\Input;
+use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Layouts\Modal;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 
-class Plugins extends Screen
+class PluginsScreen extends Screen
 {
     /**
      * Fetch data to be displayed on the screen.
@@ -88,7 +90,11 @@ class Plugins extends Screen
                         ->help('The version of the plugin currently in use'),
                     CheckBox::make('in_use')
                         ->title('Active')
-                        ->help('Is the plugin currently in use')
+                        ->help('Is the plugin currently in use'),
+                    Relation::make('servers.')
+                        ->fromModel(Server::class, 'name')
+                        ->multiple()
+                        ->title('Attach to Servers')
                 ]),
             ])
                 ->size(Modal::SIZE_LG)
@@ -104,7 +110,8 @@ class Plugins extends Screen
             'name'          => 'required',
             'description'   => 'required',
             'source'        => 'required|url',
-            'current'       => 'required'
+            'current'       => 'required',
+            'servers'       => 'array'
         ]);
 
         $input = $request->all();
@@ -113,6 +120,12 @@ class Plugins extends Screen
 
         $plugin = new Plugin($input);
         $plugin->save();
+
+        if (isset($input['servers'])) {
+            foreach ($input['servers'] as $server_id) {
+                $plugin->servers()->attach($server_id);
+            }
+        }
     }
 
     public function refresh()
