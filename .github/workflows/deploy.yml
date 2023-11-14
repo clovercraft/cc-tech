@@ -1,0 +1,24 @@
+name: Deploy Production
+
+on:
+  push:
+    branches: [ 'production', 'dev']
+
+jobs:
+  create-artifact:
+    name: Create Version Artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout Code'
+        uses: actions/checkout@v3
+      - name: 'Build FED'
+        run: |
+          npm install
+          npm run prod
+      - name: 'Setup PHP'
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: 8.2
+          extensions: mbstring, ctype, fileinfo, openssl, PDO, bcmath, json, tokenizer, xml
+      - name: 'Composer Install'
+        run: composer install --no-dev --no-interaction --prefer-dist
