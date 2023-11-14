@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Orchid\Screens;
+namespace App\Orchid\Screens\Servers;
 
 use App\Models\Server;
-use App\Orchid\Layouts\ServersTableLayout;
+use App\Orchid\Layouts\Servers\ServersTableLayout;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\Input;

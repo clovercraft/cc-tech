@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Models\Plugin;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 
@@ -21,6 +22,14 @@ class ModrinthService
     {
         $pattern = "project/{id}/version?featured=true";
         return $this->callApi($pattern, ['id' => $modrinthId]);
+    }
+
+    public function downloadLink(Plugin $plugin): string
+    {
+        $versions = $this->versions($plugin->modrinth_id);
+        $latest = $versions->first();
+        $url = $latest['files'][0]['url'];
+        return $url;
     }
 
     private function callApi(string $endpoint, array $params): Collection

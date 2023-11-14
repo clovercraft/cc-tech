@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Orchid\Layouts;
+namespace App\Orchid\Layouts\Plugins;
 
+use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
@@ -40,7 +41,8 @@ class PluginsTableLayout extends Table
             TD::make('current', 'Current Version')->sort(),
             TD::make('latest', 'Latest Release')->sort(),
             TD::make('')
-                ->render(fn ($plugin) => ModalToggle::make('view'))
+                ->render(fn ($plugin) => Link::make('Download')
+                    ->href($plugin->download_link))
         ];
     }
 }
