@@ -1,37 +1,35 @@
-name: Laravel
+# name: Laravel
+# on:
+#   push:
+#     branches: [ "production", "dev" ]
+#   pull_request:
+#     branches: [ "production" ]
 
-on:
-  push:
-    branches: [ "production", "dev" ]
-  pull_request:
-    branches: [ "production" ]
-
-jobs:
-  container-job:
-    runs-on: ubuntu-latest
-    container: laravelsail/php82-composer
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: testing
-          MYSQL_DATABASE: testing
-          MYSQL_USERNAME: sail
-          MYSQL_PASSWORD: password
-    steps:
-    - name: 'Install MySql'
-      run: 'sudo apt update && sudo apt install -y php8.2-mysql'
-    - name: 'Checkout code'
-      uses: actions/checkout@v4
-    - name: Copy .env
-      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-    - name: Install Dependencies
-      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-    - name: Generate key
-      run: php artisan key:generate
-    - name: Directory Permissions
-      run: chmod -R 777 storage bootstrap/cache
-    - name: Execute tests
-      run: php artisan test
-      env:
-        DB_HOST: mysql
+# jobs:
+#   container-job:
+#     runs-on: ubuntu-latest
+#     container: laravelsail/php82-composer
+#     services:
+#       mysql:
+#         image: mysql:8.0
+#         env:
+#           MYSQL_ROOT_PASSWORD: testing
+#           MYSQL_DATABASE: testing
+#           MYSQL_USERNAME: sail
+#           MYSQL_PASSWORD: password
+#     steps:
+#     - name: 'Checkout code'
+#       uses: actions/checkout@v4
+#     - name: Copy .env
+#       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+#     - name: Install Dependencies
+#       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+#     - name: Generate key
+#       run: php artisan key:generate
+#     - name: Directory Permissions
+#       run: chmod -R 777 storage bootstrap/cache
+#     - name: Execute tests
+#       run: php artisan test
+#       env:
+#         DB_HOST: mysql
+# # Thought to return to this on: Can we just run sail up & sail artisan test to initiate the docker containers? might work if the default runner has docker available
