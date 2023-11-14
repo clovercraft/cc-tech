@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "539d2b169d597ca96152ddaecb401f13",
+    "content-hash": "633640a01a0b56b3601a88a4b603f6b4",
     "packages": [
         {
             "name": "brick/math",
@@ -1892,6 +1892,54 @@
                 }
             ],
             "time": "2023-10-17T14:13:20+00:00"
+        },
+        {
+            "name": "logtail/monolog-logtail",
+            "version": "v3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/logtail/monolog-logtail.git",
+                "reference": "d7f13ba47a0d55e6c9fa6895eb0a68b7d1795957"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/logtail/monolog-logtail/zipball/d7f13ba47a0d55e6c9fa6895eb0a68b7d1795957",
+                "reference": "d7f13ba47a0d55e6c9fa6895eb0a68b7d1795957",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "monolog/monolog": "^3",
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Logtail\\Monolog\\": "src/Monolog"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "ISC"
+            ],
+            "description": "Logtail handler for Monolog",
+            "homepage": "https://github.com/logtail/logtail-php",
+            "keywords": [
+                "handler",
+                "log",
+                "logger",
+                "logging",
+                "monolog",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/logtail/monolog-logtail/issues",
+                "source": "https://github.com/logtail/monolog-logtail/tree/v3.0.0"
+            },
+            "time": "2023-03-01T18:58:27+00:00"
         },
         {
             "name": "monolog/monolog",
