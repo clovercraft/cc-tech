@@ -5,6 +5,7 @@ This is a management tool custom built for Clovercraft staff to manage technical
 ## Current Feature List
 - Add plugins hosted on either Spigot or Modrinth to get automatic version update information
 - Add SMP server instances to track deployments
+- Track plugins to specific SMP servers
 - Store and retreive encrypted user account information for staff use
 - Basic admin user management
 
@@ -13,7 +14,9 @@ The following are planned features ordered by the version milestone they are int
 
 ### v1.0.0
 - Add terraform configuration to deploy via pipeline to DigitalOcean
-- Create relationship between SMP server instances and plugin usage
+
+### v1.0.1
+- Restrict "latest version" on plugins by server MC version
 
 ### v1.2.0
 - Add member account management screen
