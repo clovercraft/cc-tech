@@ -31,11 +31,6 @@ class FinalizeSetup extends Command
         if ($this->isFirstSetup()) {
             $this->info('Running first time setup actions');
 
-            // run migrations
-            $this->info('Running setup migrations');
-            Artisan::call('migrate');
-            $this->info('Migrations complete');
-
             // create admin user
             $user = env('SETUP_ADMIN_USERNAME', 'admin');
             $email = env('SETUP_ADMIN_EMAIL', 'martin.sheeks@gmail.com');
