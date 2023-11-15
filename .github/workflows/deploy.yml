@@ -16,6 +16,12 @@ jobs:
           php-version: 8.2
           extensions: mbstring, ctype, fileinfo, openssl, PDO, bcmath, json, tokenizer, xml
       - name: 'Composer Install'
+        env:
+          DB_HOST: ${{ secrets.TEST_DB_HOST }}
+          DB_PORT: ${{ secrets.TEST_DB_PORT }}
+          DB_DATABASE: ${{ secrets.TEST_DB_DATABASE }}
+          DB_USERNAME: ${{ secrets.TEST_DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
         run: composer install --no-dev --no-interaction --prefer-dist
       - name: 'Run Test Suite'
         env:
