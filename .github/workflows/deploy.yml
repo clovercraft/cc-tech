@@ -4,16 +4,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  create-artifact:
-    name: Create Version Artifacts
+  test:
+    name: Run Test Suite
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout Code'
         uses: actions/checkout@v3
-      - name: 'Build FED'
-        run: |
-          npm install
-          npm run build
       - name: 'Setup PHP'
         uses: shivammathur/setup-php@master
         with:
@@ -21,12 +17,21 @@ jobs:
           extensions: mbstring, ctype, fileinfo, openssl, PDO, bcmath, json, tokenizer, xml
       - name: 'Composer Install'
         run: composer install --no-dev --no-interaction --prefer-dist
-      - name: 'Create Deployment Artifact'
+      - name: 'Run Test Suite'
         env:
-          GITHUB_SHA: ${{ github.sha }}
-        run: tar -czf "${GITHUB_SHA}".tar.gz --exclude=*.git --exclude=node_modules --exclude=tests *
-      - name: 'Store Artifact'
-        uses: actions/upload-artifact@v3
+          DB_HOST: ${{ secrets.TEST_DB_HOST }}
+          DB_PORT: ${{ secrets.TEST_DB_PORT }}
+          DB_DATABASE: ${{ secrets.TEST_DB_DATABASE }}
+          DB_USERNAME: ${{ secrets.TEST_DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+        run: php artisan test
+
+  deploy-app:
+    name: Deploy to DO App
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'DigitalOcean App Platform deployment'
+        uses: digitalocean/app_action@v1.1.5
         with:
-          name: app-build
-          path: ${{github.sha}}.tar.gz
+          app_name: clovercraft-tech
+          token: ${{ secrets.DO_TOKEN }}
