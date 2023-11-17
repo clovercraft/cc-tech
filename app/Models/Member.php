@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
  * @property string|null    $bio
  * @property string|null    $avatar
  * @property string|null    $source
+ * @property bool           $admin_added
  * @property Carbon         $deleted_at
  * @property Carbon         $updated_at
  * @property Carbon         $created_at
@@ -28,6 +29,6 @@ class Member extends Model
     use HasFactory, AsSource, SoftDeletes;
 
     protected $casts = [
-        'birthday' => 'Carbon',
+        'birthday' => 'date:Carbon',
     ];
 }
