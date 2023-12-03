@@ -15,6 +15,7 @@ class PusherAuthController extends Controller
             'socket_id'     => 'required|string',
         ]);
 
+        $key = config('broadcasting.connections.pusher.key');
         $secret = config('broadcasting.connections.pusher.secret');
 
         $toSign = implode('.', [
@@ -24,7 +25,7 @@ class PusherAuthController extends Controller
 
         $signature = hash_hmac("sha256", $toSign, $secret);
         return response()->json([
-            'auth' => $signature
+            'auth' => $key . ':' . $signature
         ]);
     }
 }
