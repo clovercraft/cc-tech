@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Orchid\Screens\CredentialsScreen;
+use App\Orchid\Screens\Members\MemberDetailScreen;
+use App\Orchid\Screens\Members\MembersScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\PluginsScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
@@ -102,3 +104,15 @@ Route::screen('credentials', CredentialsScreen::class)
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
         ->push(__('Credentials'), route('platform.credentials')));
+
+Route::screen('members', MembersScreen::class)
+    ->name('platform.members')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Members'), route('platform.members')));
+
+Route::screen('members/{member}', MemberDetailScreen::class)
+    ->name('platform.member.details')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.members')
+        ->push(__('Detail View')));

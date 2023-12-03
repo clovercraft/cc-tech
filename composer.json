@@ -15,7 +15,8 @@
         "laravel/tinker": "^2.8",
         "league/flysystem-aws-s3-v3": "^3.0",
         "logtail/monolog-logtail": "^3.0",
-        "orchid/platform": "^14.15"
+        "orchid/platform": "^14.15",
+        "pusher/pusher-php-server": "^7.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

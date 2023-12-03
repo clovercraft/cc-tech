@@ -41,6 +41,15 @@ class PlatformProvider extends OrchidServiceProvider
                 ->route(config('platform.index')),
         ]);
 
+        if (Auth::user()->hasAccess('member.view')) {
+            $menu->push(
+                Menu::make('Members')
+                    ->icon('bs.people')
+                    ->route('platform.members')
+                    ->title('Member Management')
+            );
+        }
+
         if (Auth::user()->hasAccess('tech.view')) {
             $menu->push(
                 Menu::make('Servers')
@@ -93,6 +102,13 @@ class PlatformProvider extends OrchidServiceProvider
             ItemPermission::group(__('System'))
                 ->addPermission('platform.systems.roles', __('Roles'))
                 ->addPermission('platform.systems.users', __('Users')),
+
+            ItemPermission::group(__('Members'))
+                ->addPermission('member.view',    __('View'))
+                ->addPermission('member.create',  __('Create'))
+                ->addPermission('member.edit',    __('Edit'))
+                ->addPermission('member.manage', __('Manage'))
+                ->addPermission('member.delete',  __('Delete')),
 
             ItemPermission::group(__('Technical Assets'))
                 ->addPermission('tech.view',    __('View'))

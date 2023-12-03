@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PusherAuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +16,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::controller(PusherAuthController::class)->group(function () {
+    Route::post('/pusher/auth', 'pusher_auth');
 });
