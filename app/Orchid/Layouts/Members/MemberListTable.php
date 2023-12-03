@@ -5,6 +5,8 @@ namespace App\Orchid\Layouts\Members;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
 use App\Models\Member;
+use Orchid\Screen\Actions\Link;
+use Orchid\Support\Facades\Layout;
 
 class MemberListTable extends Table
 {
@@ -34,6 +36,12 @@ class MemberListTable extends Table
                 ->sort()
                 ->render(function (Member $member) {
                     return $member->birthday->format('M d, Y');
+                }),
+            TD::make()
+                ->render(function (Member $member) {
+                    return Link::make('view')
+                        ->icon('bs.eye')
+                        ->route('platform.member.details', ['member' => $member]);
                 })
         ];
     }
