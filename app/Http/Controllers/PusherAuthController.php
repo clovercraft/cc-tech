@@ -23,7 +23,7 @@ class PusherAuthController extends Controller
             $request->input('channel_name')
         ]);
 
-        $signature = hash_hmac("sha256", $toSign, $secret);
+        $signature = bin2hex(hash_hmac("sha256", $toSign, $secret));
         return response()->json([
             'auth' => $key . ':' . $signature
         ]);
