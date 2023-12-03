@@ -18,7 +18,7 @@ class PusherAuthController extends Controller
         $key = config('broadcasting.connections.pusher.key');
         $secret = config('broadcasting.connections.pusher.secret');
 
-        $toSign = implode('.', [
+        $toSign = implode(':', [
             $request->input('socket_id'),
             $request->input('channel_name')
         ]);
