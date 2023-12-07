@@ -88,6 +88,16 @@ class PlatformProvider extends OrchidServiceProvider
             );
         }
 
+        if (Auth::user()->hasAccess('platform.systems.settings')) {
+            $menu->push(
+                Menu::make(__('Settings'))
+                    ->icon('bs.gear-wide-connected')
+                    ->route('platform.systems.settings')
+                    ->permission('platform.systems.settings')
+                    ->title(__('Site Settings'))
+            );
+        }
+
         return $menu->toArray();
     }
 
@@ -101,7 +111,8 @@ class PlatformProvider extends OrchidServiceProvider
         return [
             ItemPermission::group(__('System'))
                 ->addPermission('platform.systems.roles', __('Roles'))
-                ->addPermission('platform.systems.users', __('Users')),
+                ->addPermission('platform.systems.users', __('Users'))
+                ->addPermission('platform.systems.settings', __('Settings')),
 
             ItemPermission::group(__('Members'))
                 ->addPermission('member.view',    __('View'))
