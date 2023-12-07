@@ -6,6 +6,7 @@ use App\Facades\Discord;
 use App\Models\AppSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
 class DiscordAuthController extends Controller
@@ -22,6 +23,7 @@ class DiscordAuthController extends Controller
     public function discord_authorize(Request $request)
     {
         $user = Socialite::driver('discord')->user();
+        Log::info("Discord auth", [$user->token, $user->refreshToken, $user->expiresIn]);
         $this->createSettingRecords($user->token, $user->refreshToken, $user->expiresIn);
         return redirect()->route('platform.systems.settings');
     }

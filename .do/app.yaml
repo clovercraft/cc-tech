@@ -9,6 +9,13 @@ databases:
   name: traction-dbs
   production: true
   version: "8"
+domains:
+- domain: admin.clovercraft.gg
+  type: PRIMARY
+envs:
+- key: LOG_CHANNEL
+  scope: RUN_AND_BUILD_TIME
+  value: logtail
 features:
 - buildpack-stack=ubuntu-22
 ingress:
@@ -18,28 +25,29 @@ ingress:
     match:
       path:
         prefix: /
-name: cc-tech
+jobs:
+- build_command: npm run build
+  environment_slug: php
+  envs:
+  - key: DB_DATABASE
+    scope: RUN_AND_BUILD_TIME
+    value: cc_tech_test
+  github:
+    branch: production
+    repo: clovercraft/cc-tech
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  kind: POST_DEPLOY
+  name: migrations
+  run_command: php artisan migrate --force
+  source_dir: /
+name: clovercraft-tech
 region: nyc
 services:
 - build_command: npm run build
   environment_slug: php
   envs:
-  - key: APP_NAME
-    scope: RUN_AND_BUILD_TIME
-    value: CC Manager
-  - key: APP_KEY
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:zNokXK2Tp4FC8naNvUg5xKd7DOW5+VXl:TteQp2vNOsLdNfFgcnXUsw34POMP3YUmD266ZvaePFk3gu96vCIUwIpJHJhH0x0E6yJB9RRJphuSvomaOfLbW7F5FA==]
-  - key: APP_URL
-    scope: RUN_AND_BUILD_TIME
-    value: ${cc-tech.PUBLIC_URL}
-  - key: LOG_LEVEL
-    scope: RUN_AND_BUILD_TIME
-    value: debug
-  - key: DATABASE_URL
-    scope: RUN_AND_BUILD_TIME
-    value: ${traction-dbs.DATABASE_URL}
+
   github:
     branch: production
     repo: clovercraft/cc-tech
@@ -48,4 +56,14 @@ services:
   instance_size_slug: basic-xs
   name: cc-tech
   run_command: heroku-php-apache2 public/
+  source_dir: /
+workers:
+- dockerfile_path: Dockerfile
+  github:
+    branch: main
+    deploy_on_push: true
+    repo: clovercraft/cctech-docker-cron
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  name: docker-cron
   source_dir: /

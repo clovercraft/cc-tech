@@ -35,7 +35,20 @@ class MemberListTable extends Table
             TD::make('birthday')
                 ->sort()
                 ->render(function (Member $member) {
+                    if ($member->birthday == null) {
+                        return '';
+                    }
                     return $member->birthday->format('M d, Y');
+                }),
+            TD::make('status')
+                ->sort(),
+            TD::make('lastseen_at', 'Last Seen')
+                ->sort()
+                ->render(function (Member $member) {
+                    if ($member->lastseen_at == null) {
+                        return '';
+                    }
+                    return $member->lastseen_at->toDateTimeString();
                 }),
             TD::make()
                 ->render(function (Member $member) {
