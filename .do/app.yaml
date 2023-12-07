@@ -165,4 +165,3 @@ workers:
   instance_count: 1
   instance_size_slug: basic-xxs
   name: docker-cron
-  source_dir: /
