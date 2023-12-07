@@ -4,8 +4,10 @@ namespace App\Service;
 
 use App\Models\AppSetting;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
 class DiscordService
@@ -35,22 +37,64 @@ class DiscordService
             ->redirect();
     }
 
+    public function has_authorization(): bool
+    {
+        // check token is set
+        $token = $this->getAuthToken(true);
+        if (empty($token)) {
+            return false;
+        }
+
+        // check status
+        $authentication = $this->checkAppStatus();
+        if ($authentication->has('user') && $authentication->has('expires')) {
+            $expires = Carbon::parse($authentication->get('expires'));
+            $diff = now()->diffInMinutes($expires, false);
+            return $diff > 0;
+        }
+
+        return false;
+    }
+
     public function botInviteLink(): string
     {
         return sprintf("https://discord.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8", env('DISCORD_CLIENT_ID'));
     }
 
+    /**
+     * I never got ths to work, going to just check auth status instead.
+     * @deprecated 0.0
+     *
+     * @return void
+     */
     public function refresh_authorization()
     {
-        $token = AppSetting::access('discord_token');
-        $refresh_token = AppSetting::access('discord_refresh_token');
+        $refresh_token = $this->getRefreshToken();
+        $client_id = env('DISCORD_CLIENT_ID');
+        $client_secret = env('DISCORD_CLIENT_SECRET');
+        $auth = "Basic " . $client_id . ":" . $client_secret;
 
         $data = [
             'grant_type'    => 'refresh_token',
-            'refresh_token' => AppSetting::where('slug', 'discord_refresh_token')->first()->value,
+            'refresh_token' => $refresh_token,
         ];
 
-        $uri = $this->request_url('/oauth2/token');
+        $uri = 'https://discord.com/api/v10/oauth2/token';
+        Log::info("Attempting Discord token refresh", [$uri, $auth, $data]);
+        // $response = Http::withHeaders([
+        //     "Authorization" => $auth,
+        //     "Content-Type"  => "application/x-www-form-urlencoded"
+        // ])
+        //     ->post($uri, $data);
+        $response = Http::withBasicAuth($client_id, $client_secret)
+            ->contentType('application/x-www-form-urlencoded')
+            ->post($uri, $data);
+        if ($response->failed()) {
+            dd($response->body());
+        }
+        // $user = Socialite::driver('discord')->userFromToken($this->getAuthToken());
+
+        return $response;
     }
 
     public function checkAppStatus(): Collection
@@ -59,7 +103,7 @@ class DiscordService
         return $response->collect();
     }
 
-    public function getGuildMembers(): Collection
+    public function get_members(): Collection
     {
         $guild_id = env('DISCORD_GUILD_ID');
         $path = sprintf("/guilds/%s/members", $guild_id);
@@ -73,7 +117,7 @@ class DiscordService
                 'limit' => 100
             ]);
             $entries = $response->collect();
-            $members->merge($entries);
+            $members = $members->merge($entries);
             $count = $entries->count();
         }
 

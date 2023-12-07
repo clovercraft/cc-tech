@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Screens\Members;
 
+use App\Facades\Discord;
 use App\Models\Member;
 use App\Orchid\Layouts\Members\MemberListTable;
 use Illuminate\Http\Request;
