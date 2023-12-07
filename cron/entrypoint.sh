@@ -2,8 +2,8 @@
 
 env >> /etc/environment
 
-composer install
-php artisan key:generate
+cd /app && composer install
+php /app/artisan key:generate
 
 # execute CMD
 echo "$@"
