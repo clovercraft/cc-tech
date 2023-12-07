@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PusherAuthController;
 use App\Http\Controllers\DiscordAuthController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,4 +27,8 @@ Route::controller(PusherAuthController::class)->group(function () {
 Route::controller(DiscordAuthController::class)->group(function () {
     Route::get('/oauth/initiate', 'discord_authenticate')->name('discord.authorize');
     Route::get('/oauth/return', 'discord_authorize');
+});
+
+Route::get('/scheduler', function () {
+    Artisan::command('schedule:run');
 });
