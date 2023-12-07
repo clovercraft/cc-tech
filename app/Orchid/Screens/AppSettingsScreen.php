@@ -52,8 +52,6 @@ class AppSettingsScreen extends Screen
     public function layout(): iterable
     {
         $block = [];
-        $members = Discord::getGuildMembers();
-        dd($members->toArray());
         if ($this->isDiscordInstalled()) {
             $block = [
                 Layout::view(
