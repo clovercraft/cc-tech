@@ -31,8 +31,8 @@ RUN apt-get update \
     && which cron \
     && rm -rf /etc/cron.*/*
 
-COPY ./crontab /hello-cron
-COPY ./entrypoint.sh /entrypoint.sh
+COPY /cron/crontab /hello-cron
+COPY /cron/entrypoint.sh /entrypoint.sh
 
 RUN crontab hello-cron
 RUN chmod +x entrypoint.sh
