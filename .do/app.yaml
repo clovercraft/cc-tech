@@ -16,6 +16,102 @@ envs:
 - key: LOG_CHANNEL
   scope: RUN_AND_BUILD_TIME
   value: logtail
+- key: LOGTAIL_SOURCE_TOKEN
+  scope: RUN_AND_BUILD_TIME
+  type: SECRET
+  value: EV[1:nh2WC8Y51dWJ99rRVh1PyAUeTl/38ksV:RIQ/JXhUkQOR9Id12Iw+u54y6pGAY/EMNCf6+KDvH/ZA41nQzgv/XA==]
+- key: SETUP_ADMIN_USERNAME
+  scope: RUN_AND_BUILD_TIME
+  value: zenfrii
+- key: SETUP_ADMIN_EMAIL
+  scope: RUN_AND_BUILD_TIME
+  value: martin.sheeks@gmail.com
+- key: SETUP_ADMIN_PASSWORD
+  scope: RUN_AND_BUILD_TIME
+  type: SECRET
+  value: EV[1:N3vapuFYFG5/Poeb2f1q0IhU43N6wMlT:DY/Yw31tDzGydOCxndLEzLcPWbMGTMTNrQ==]
+- key: DO_ACCESS_KEY_ID
+  scope: RUN_AND_BUILD_TIME
+  value: DO00AX4Z7E8P3M7PV46T
+- key: DO_SECRET_ACCESS_KEY
+  scope: RUN_AND_BUILD_TIME
+  type: SECRET
+  value: EV[1:5Smv88PaXeQAqWrRz9OOana3Av/sNZvZ:XxG2+u5ceo9gB2fauRRkNHNAeFDrQeLuzedasR3Vyq9UKrr83DduAIo8kT+N7fap5rZ2AcCT/QL9JNk=]
+- key: FILESYSTEM_DISK
+  scope: RUN_AND_BUILD_TIME
+  value: do
+- key: DB_HOST
+  scope: RUN_AND_BUILD_TIME
+  value: traction-dbs-do-user-1256534-0.b.db.ondigitalocean.com
+- key: DB_PORT
+  scope: RUN_AND_BUILD_TIME
+  value: "25060"
+- key: DB_USERNAME
+  scope: RUN_AND_BUILD_TIME
+  value: cc_tech
+- key: DB_PASSWORD
+  scope: RUN_AND_BUILD_TIME
+  type: SECRET
+  value: EV[1:47WzZhuERkOaHxU8q2xGLR3xWOBhpKgk:xhKV+uitan6eo6Q0Uo9LpmURVQdnWWO0lc5CPGSKUzrf6sbkQFuCgQ==]
+- key: PUSHER_APP_ID
+  scope: RUN_AND_BUILD_TIME
+  value: "1457717"
+- key: PUSHER_APP_KEY
+  scope: RUN_AND_BUILD_TIME
+  value: 920838e512bd6bbb8ede
+- key: PUSHER_APP_SECRET
+  scope: RUN_AND_BUILD_TIME
+  value: ff20b34f0586f9e1e73e
+- key: PUSHER_APP_CLUSTER
+  scope: RUN_AND_BUILD_TIME
+  value: us2
+- key: PUSHER_PORT
+  scope: RUN_AND_BUILD_TIME
+  value: "443"
+- key: PUSHER_SCHEME
+  scope: RUN_AND_BUILD_TIME
+  value: https
+- key: SMP_RELAY_CHANNEL
+  scope: RUN_AND_BUILD_TIME
+  value: private-smp-relay-test
+- key: APP_NAME
+  scope: RUN_AND_BUILD_TIME
+  value: CC Manager
+- key: APP_URL
+  scope: RUN_AND_BUILD_TIME
+  value: https://admin.clovercraft.gg
+- key: LOG_LEVEL
+  scope: RUN_AND_BUILD_TIME
+  value: debug
+- key: DB_DATABASE
+  scope: RUN_AND_BUILD_TIME
+  value: cc_tech
+- key: DISCORD_APP_ID
+  scope: RUN_AND_BUILD_TIME
+  type: SECRET
+  value: EV[1:VyDHQZbmvzwfxZoyZn0qHsXwaK0nA6cw:R8Zpeyso9nBlS1PhscwjE6jbcyOnfl+VV4FJIrGbRYJmQKE=]
+- key: DISCORD_PUBLIC_KEY
+  scope: RUN_AND_BUILD_TIME
+  type: SECRET
+  value: EV[1:yKvvIDAIOwny9oSGC1qxp6ImNMw0Rk5g:mpDkIAzaZ8X0OEmxxm8gudugPO0ZgOiMM/OgJ2Ja2wmCSK6gRBGeIHtaUQrqAi2Ny51tWW4J1Lc1ZDeDLmNMpIsnXZ0BSi7I+3EsmLKclwo=]
+- key: DISCORD_CLIENT_ID
+  scope: RUN_AND_BUILD_TIME
+  type: SECRET
+  value: EV[1:sB/tSpua6Ad4aiwL6A2BXMJE7dG9Hw8V:1VaWzfM93v8TIR+p3W+ujuSdhMSeUfBUzVVKfyJnoH0O3Qc=]
+- key: DISCORD_CLIENT_SECRET
+  scope: RUN_AND_BUILD_TIME
+  type: SECRET
+  value: EV[1:2IZHneCKuCyHRw36zEeh0TRV6E2VM9L5:vR5JVODSUSTRzjzbRtZF0/HVFMuSfsLyJzK510u1NfuNtGvAEzKVLfHR6n65gaN5]
+- key: DISCORD_GUILD_ID
+  scope: RUN_AND_BUILD_TIME
+  value: "1151306384181305505"
+- key: DISCORD_BOT_TOKEN
+  scope: RUN_AND_BUILD_TIME
+  type: SECRET
+  value: EV[1:52JPQAVLMJ3IOo8BCeO27YqU8wcfycmg:FrPFl0jMdJhU/XQsBHuRcUDU+hghH91Q2XRoRf+QtKps9OdGjYiskp/61Zgsw5U+mhQb0JFCFrAh6US635j+0G2YOkka3iEw/UWvu20qcKuakhpANCp+EA==]
+- key: DISCORD_REDIRECT_URL
+  scope: RUN_AND_BUILD_TIME
+  value: https://admin.clovercraft.gg/oauth/return
 features:
 - buildpack-stack=ubuntu-22
 ingress:
@@ -47,7 +143,10 @@ services:
 - build_command: npm run build
   environment_slug: php
   envs:
-
+  - key: APP_KEY
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:zNokXK2Tp4FC8naNvUg5xKd7DOW5+VXl:TteQp2vNOsLdNfFgcnXUsw34POMP3YUmD266ZvaePFk3gu96vCIUwIpJHJhH0x0E6yJB9RRJphuSvomaOfLbW7F5FA==]
   github:
     branch: production
     repo: clovercraft/cc-tech
@@ -58,11 +157,11 @@ services:
   run_command: heroku-php-apache2 public/
   source_dir: /
 workers:
-- dockerfile_path: Dockerfile
+- dockerfile_path: cron/Dockerfile
   github:
-    branch: main
+    branch: production
     deploy_on_push: true
-    repo: clovercraft/cctech-docker-cron
+    repo: clovercraft/cc-tech
   instance_count: 1
   instance_size_slug: basic-xxs
   name: docker-cron
