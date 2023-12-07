@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Facades\Discord;
 use App\Models\Member;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class UpdateMemberRoster extends Command
 {
@@ -35,6 +36,7 @@ class UpdateMemberRoster extends Command
 
         $this->info("Pulling roster from Discord");
         $members = Discord::get_members();
+        $runtime = now();
 
         $this->info("API returned " . $members->count() . " member records");
 
@@ -45,13 +47,19 @@ class UpdateMemberRoster extends Command
                 $this->info("Skipping bot user: " . $user['username']);
                 continue;
             }
-            $record = Member::syncFromDiscord($user);
-            if ($record) {
-                $this->info("Synced user: " . $record->name);
-            }
+            $record = Member::syncFromDiscord($user, $runtime);
         }
 
-        $this->info("All members synced");
+        $this->info("All active members updated");
+
+        // mark users no longer in the roster as inactive
+        $expired = DB::table('members')
+            ->whereDate('lastseen_at', '<', $runtime)
+            ->update([
+                'status'    => 'inactive'
+            ]);
+
+        $this->info($expired . " accounts have expired from the roster.");
 
         return Command::SUCCESS;
     }

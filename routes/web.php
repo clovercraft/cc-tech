@@ -28,7 +28,3 @@ Route::controller(DiscordAuthController::class)->group(function () {
     Route::get('/oauth/initiate', 'discord_authenticate')->name('discord.authorize');
     Route::get('/oauth/return', 'discord_authorize');
 });
-
-Route::get('/scheduler', function () {
-    Artisan::call('schedule:run');
-});

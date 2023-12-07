@@ -43,7 +43,7 @@ class Member extends Model
         'lastseen_at'   => 'date:Carbon'
     ];
 
-    public static function syncFromDiscord(array $user): Member
+    public static function syncFromDiscord(array $user, Carbon $runtime): Member
     {
         return Member::updateOrCreate(
             [
@@ -53,7 +53,7 @@ class Member extends Model
                 'name'          => $user['global_name'],
                 'avatar'        => 'https://cdn.discordapp.com/avatars/' . $user['id'] . '/' . $user['avatar'] . '.png',
                 'status'        => 'active',
-                'lastseen_at'   => now()
+                'lastseen_at'   => $runtime
             ]
         );
     }

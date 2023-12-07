@@ -90,11 +90,15 @@ class PlatformProvider extends OrchidServiceProvider
 
         if (Auth::user()->hasAccess('platform.systems.settings')) {
             $menu->push(
-                Menu::make(__('Settings'))
+                Menu::make(__('Application Settings'))
                     ->icon('bs.gear-wide-connected')
                     ->route('platform.systems.settings')
                     ->permission('platform.systems.settings')
-                    ->title(__('Site Settings'))
+                    ->title(__('Site Settings')),
+                Menu::make(__('Task Scheduler'))
+                    ->icon('bs.stopwatch')
+                    ->url('/totem')
+                    ->permission('platform.systems.scheduler')
             );
         }
 
