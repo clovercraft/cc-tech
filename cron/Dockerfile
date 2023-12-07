@@ -31,6 +31,9 @@ RUN apt-get update \
     && which cron \
     && rm -rf /etc/cron.*/*
 
+RUN composer install
+RUN php artisan key:generate
+
 COPY /cron/crontab /hello-cron
 COPY /cron/entrypoint.sh /entrypoint.sh
 
