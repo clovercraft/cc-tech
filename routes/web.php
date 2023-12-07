@@ -30,5 +30,5 @@ Route::controller(DiscordAuthController::class)->group(function () {
 });
 
 Route::get('/scheduler', function () {
-    Artisan::command('schedule:run');
+    Artisan::call('schedule:run');
 });
