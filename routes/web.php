@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PusherAuthController;
 use App\Http\Controllers\DiscordAuthController;
+use App\Http\Controllers\FrontController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -16,9 +17,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::controller(FrontController::class)
+    ->name('front.')
+    ->group(function () {
+        Route::get('/', 'index')->name('home');
+    });
 
 Route::controller(PusherAuthController::class)->group(function () {
     Route::post('/pusher/auth', 'pusher_auth');
