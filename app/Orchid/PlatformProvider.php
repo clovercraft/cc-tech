@@ -50,6 +50,15 @@ class PlatformProvider extends OrchidServiceProvider
             );
         }
 
+        if (Auth::user()->hasAccess('content.edit')) {
+            $menu->push(
+                Menu::make('Pages')
+                    ->icon('bs.page')
+                    ->route('platform.pages')
+                    ->title('Content Manager')
+            );
+        }
+
         if (Auth::user()->hasAccess('tech.view')) {
             $menu->push(
                 Menu::make('Servers')
@@ -113,18 +122,17 @@ class PlatformProvider extends OrchidServiceProvider
     public function permissions(): array
     {
         return [
-            ItemPermission::group(__('System'))
-                ->addPermission('platform.systems.roles', __('Roles'))
-                ->addPermission('platform.systems.users', __('Users'))
-                ->addPermission('platform.systems.settings', __('Settings'))
-                ->addPermission('platform.systems.scheduler', __('Scheduler')),
-
             ItemPermission::group(__('Members'))
                 ->addPermission('member.view',    __('View'))
                 ->addPermission('member.create',  __('Create'))
                 ->addPermission('member.edit',    __('Edit'))
                 ->addPermission('member.manage', __('Manage'))
                 ->addPermission('member.delete',  __('Delete')),
+
+            ItemPermission::group(__('Content Manager'))
+                ->addPermission('content.edit', __('Edit'))
+                ->addPermission('content.create', __('Create'))
+                ->addPermission('content.delete', __('Delete')),
 
             ItemPermission::group(__('Technical Assets'))
                 ->addPermission('tech.view',    __('View'))
@@ -137,6 +145,12 @@ class PlatformProvider extends OrchidServiceProvider
                 ->addPermission('creds.create',  __('Create'))
                 ->addPermission('creds.edit',    __('Edit'))
                 ->addPermission('creds.delete',  __('Delete')),
+
+            ItemPermission::group(__('System'))
+                ->addPermission('platform.systems.roles', __('Roles'))
+                ->addPermission('platform.systems.users', __('Users'))
+                ->addPermission('platform.systems.settings', __('Settings'))
+                ->addPermission('platform.systems.scheduler', __('Scheduler')),
         ];
     }
 }

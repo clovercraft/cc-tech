@@ -1,0 +1,13 @@
+.navbar-brand img {
+    height: 75px;
+}
+
+.nav-item a {
+    font-family: 'righteous';
+    font-size: 1.5em;
+    color: $black;
+
+    &:hover {
+        color: $mountain;
+    }
+}

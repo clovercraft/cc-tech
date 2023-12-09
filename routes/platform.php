@@ -6,6 +6,7 @@ use App\Orchid\Screens\AppSettingsScreen;
 use App\Orchid\Screens\CredentialsScreen;
 use App\Orchid\Screens\Members\MemberDetailScreen;
 use App\Orchid\Screens\Members\MembersScreen;
+use App\Orchid\Screens\PagesScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\PluginsScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
@@ -123,3 +124,9 @@ Route::screen('settings', AppSettingsScreen::class)
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
         ->push(__('App Settings')));
+
+Route::screen('pages', PagesScreen::class)
+    ->name('platform.pages')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Content Manager')));

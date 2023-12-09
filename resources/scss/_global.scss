@@ -1,0 +1,32 @@
+body {
+    background: $black;
+    color: $black;
+    position: relative;
+}
+
+#page-content {
+    margin-top: 30vh;
+    background: $white;
+    border-radius: 15px 15px 0 0;
+    min-height: 100vh;
+    z-index: 100;
+    padding: 3rem;
+    box-shadow: 5px 15px 5px rgba($mountain, 0.8);
+}
+
+#banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    z-index: -100;
+    max-height: 45vh;
+    overflow-x: hidden;
+
+    img {
+        width: 100%;
+        z-index: 0;
+    }
+}
