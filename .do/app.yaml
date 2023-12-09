@@ -112,6 +112,10 @@ envs:
 - key: DISCORD_REDIRECT_URL
   scope: RUN_AND_BUILD_TIME
   value: https://admin.clovercraft.gg/oauth/return
+- key: APP_KEY
+  scope: RUN_AND_BUILD_TIME
+  type: SECRET
+  value: EV[1:ssWsd7FxYAI34o+GtPPmzogV3MJIUKcD:H/XIrw+q75J/PGFmvssN54yoG5aYFTztrfwoP79bGp8kq00v8jBuseAmHoKaYhVQe7nogphWeA4oAo2t2pNTeqvbIg==]
 features:
 - buildpack-stack=ubuntu-22
 ingress:
@@ -121,22 +125,6 @@ ingress:
     match:
       path:
         prefix: /
-jobs:
-- build_command: npm run build
-  environment_slug: php
-  envs:
-  - key: DB_DATABASE
-    scope: RUN_AND_BUILD_TIME
-    value: cc_tech_test
-  github:
-    branch: production
-    repo: clovercraft/cc-tech
-  instance_count: 1
-  instance_size_slug: basic-xxs
-  kind: POST_DEPLOY
-  name: migrations
-  run_command: php artisan migrate --force
-  source_dir: /
 name: clovercraft-tech
 region: nyc
 services:
