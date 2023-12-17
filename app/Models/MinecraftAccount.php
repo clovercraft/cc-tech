@@ -14,7 +14,8 @@ use Orchid\Screen\AsSource;
  * @property string         $name
  * @property string|null    $uuid
  * @property string         $status
- * @property DiscordMember  $discordMember
+ * @property Member         $member
+ * @property Carbon|null    $whitelisted_at
  * @property Carbon         $created_at
  * @property Carbon         $updated_at
  * @property Carbon|null    $deleted_at
@@ -28,8 +29,12 @@ class MinecraftAccount extends Model
     public const INACTIVE   = 'inactive';
     public const BANNED     = 'banned';
 
-    public function discordMember(): BelongsTo
+    protected $casts = [
+        'whitelsted_at' => 'date:Carbon'
+    ];
+
+    public function member(): BelongsTo
     {
-        return $this->belongsTo(DiscordMember::class);
+        return $this->belongsTo(Member::class);
     }
 }

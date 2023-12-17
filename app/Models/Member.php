@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Orchid\Screen\AsSource;
 use Illuminate\Support\Carbon;
@@ -44,6 +45,11 @@ class Member extends Model
         'birthday' => 'date:Carbon',
         'lastseen_at'   => 'date:Carbon'
     ];
+
+    public function minecraftAccounts(): HasMany
+    {
+        return $this->hasMany(MinecraftAccount::class);
+    }
 
     public static function syncFromDiscord(array $user, Carbon $runtime): bool|Member
     {

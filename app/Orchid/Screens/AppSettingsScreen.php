@@ -4,15 +4,13 @@ namespace App\Orchid\Screens;
 
 use App\Facades\Discord;
 use App\Models\AppSetting;
-use Orchid\Screen\Actions\Button;
-use Orchid\Screen\Actions\Link;
-use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 
 class AppSettingsScreen extends Screen
 {
     public $settings;
+    public $syncfile;
 
     /**
      * Fetch data to be displayed on the screen.

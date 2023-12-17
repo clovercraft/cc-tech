@@ -36,6 +36,12 @@ return [
             'throw' => false,
         ],
 
+        'runfiles' => [
+            'driver' => 'local',
+            'root' => base_path('resources/runfiles'),
+            'throw' => false
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
