@@ -45,7 +45,7 @@ class Member extends Model
         'lastseen_at'   => 'date:Carbon'
     ];
 
-    public static function syncFromDiscord(array $user, Carbon $runtime): Member
+    public static function syncFromDiscord(array $user, Carbon $runtime): bool|Member
     {
         $userId = key_exists('id', $user) ? $user['id'] : '';
         $userName = key_exists('global_name', $user) ? $user['global_name'] : '';
@@ -55,6 +55,7 @@ class Member extends Model
             Log::warning("Could not create Member record for Discord object.", ['discordObj' => $user]);
             return false;
         }
+
         return Member::updateOrCreate(
             [
                 'discord_id'    => $user['id']

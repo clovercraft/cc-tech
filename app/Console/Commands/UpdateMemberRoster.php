@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Facades\Discord;
 use App\Models\Member;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -42,12 +43,20 @@ class UpdateMemberRoster extends Command
 
         // update or create the member entries
         foreach ($members as $member) {
-            $user = $member['user'];
-            if (key_exists('bot', $user) && $user['bot'] == true) {
-                $this->info("Skipping bot user: " . $user['username']);
-                continue;
+            try {
+                if (!is_array($member) || !key_exists('user', $member)) {
+                    $this->info('Skipping non-user record.');
+                }
+
+                $user = $member['user'];
+                if (key_exists('bot', $user) && $user['bot'] == true) {
+                    $this->info("Skipping bot user: " . $user['username']);
+                    continue;
+                }
+                $record = Member::syncFromDiscord($user, $runtime);
+            } catch (Exception $e) {
+                $this->warn("Encountered fatal error during API update.");
             }
-            $record = Member::syncFromDiscord($user, $runtime);
         }
 
         $this->info("All active members updated");
