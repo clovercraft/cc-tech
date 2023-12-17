@@ -17,6 +17,7 @@
         "laravel/tinker": "^2.8",
         "league/flysystem-aws-s3-v3": "^3.0",
         "logtail/monolog-logtail": "^3.0",
+        "orchid/crud": "^4.1",
         "orchid/platform": "^14.15",
         "pusher/pusher-php-server": "^7.2",
         "socialiteproviders/discord": "^4.2",

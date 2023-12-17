@@ -41,15 +41,6 @@ class PlatformProvider extends OrchidServiceProvider
                 ->route(config('platform.index')),
         ]);
 
-        if (Auth::user()->hasAccess('member.view')) {
-            $menu->push(
-                Menu::make('Members')
-                    ->icon('bs.people')
-                    ->route('platform.members')
-                    ->title('Member Management')
-            );
-        }
-
         if (Auth::user()->hasAccess('content.edit')) {
             $menu->push(
                 Menu::make('Pages')

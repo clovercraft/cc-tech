@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Orchid\Screen\AsSource;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
+use Orchid\Filters\Filterable;
 
 /**
  * Member model
@@ -28,7 +30,7 @@ use Illuminate\Support\Carbon;
  */
 class Member extends Model
 {
-    use HasFactory, AsSource, SoftDeletes;
+    use HasFactory, AsSource, SoftDeletes, Filterable;
 
     protected $fillable = [
         'discord_id',
@@ -45,6 +47,14 @@ class Member extends Model
 
     public static function syncFromDiscord(array $user, Carbon $runtime): Member
     {
+        $userId = key_exists('id', $user) ? $user['id'] : '';
+        $userName = key_exists('global_name', $user) ? $user['global_name'] : '';
+        $userAvatar = key_exists('avatar', $user) ? $user['avatar'] : '';
+
+        if (empty($userId) || empty($userName) || empty($userAvatar)) {
+            Log::warning("Could not create Member record for Discord object.", ['discordObj' => $user]);
+            return false;
+        }
         return Member::updateOrCreate(
             [
                 'discord_id'    => $user['id']
