@@ -42,6 +42,10 @@ class UpdateMemberRoster extends Command
 
         // update or create the member entries
         foreach ($members as $member) {
+            if (!is_array($member) || !key_exists('user', $member)) {
+                $this->info('Skipping non-user record.');
+            }
+
             $user = $member['user'];
             if (key_exists('bot', $user) && $user['bot'] == true) {
                 $this->info("Skipping bot user: " . $user['username']);
