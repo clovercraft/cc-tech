@@ -43,7 +43,7 @@ class DiscordAuthController extends Controller
 
     public function discord_authenticate()
     {
-        if (!Auth::user()->hasAccess('platform.systems.settings')) {
+        if (!Auth::user()->hasAccess('staff.system')) {
             return redirect()->route('platform.home');
         }
         return Discord::authorize();
@@ -54,7 +54,7 @@ class DiscordAuthController extends Controller
         $user = Socialite::driver('discord')->user();
         Log::info("Discord auth", [$user->token, $user->refreshToken, $user->expiresIn]);
         $this->createSettingRecords($user->token, $user->refreshToken, $user->expiresIn);
-        return redirect()->route('platform.systems.settings');
+        return redirect()->route('staff.system');
     }
 
     private function createSettingRecords(string $token, string $refresh, string $expires_in)

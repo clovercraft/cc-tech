@@ -28,7 +28,7 @@ class MemberResource extends Resource
 
     public static function permission(): ?string
     {
-        return 'member.manage';
+        return 'staff.members';
     }
 
     /**

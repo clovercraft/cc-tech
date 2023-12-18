@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Totem::auth(function ($request) {
-            return Auth::check() && Auth::user()->hasAccess('platform.systems.scheduler');
+            return Auth::check() && Auth::user()->hasAccess('staff.system');
         });
     }
 }

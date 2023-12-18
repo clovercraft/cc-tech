@@ -127,7 +127,7 @@ Route::screen('members/{member}', MemberDetailScreen::class)
         ->push(__('Detail View')));
 
 Route::screen('settings', AppSettingsScreen::class)
-    ->name('platform.systems.settings')
+    ->name('staff.system')
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
         ->push(__('App Settings')));
