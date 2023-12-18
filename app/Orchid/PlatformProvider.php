@@ -35,9 +35,11 @@ class PlatformProvider extends OrchidServiceProvider
     public function menu(): array
     {
         $menu = collect([
+            Menu::make('Dashboard')
+                ->icon('bs.house')
+                ->route(config('platform.index')),
             Menu::make('My Account')
                 ->icon('bs.person')
-                ->title('Account Management')
                 ->route('platform.member.self'),
         ]);
 
