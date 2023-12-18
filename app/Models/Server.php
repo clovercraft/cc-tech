@@ -17,6 +17,7 @@ use Orchid\Screen\AsSource;
  * @property string $ip
  * @property string $type
  * @property string $current_version
+ * @property string $api_key
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $deleted_at
@@ -33,7 +34,8 @@ class Server extends Model
         'name',
         'ip',
         'type',
-        'current_version'
+        'current_version',
+        'api_key',
     ];
 
     public function plugins(): BelongsToMany

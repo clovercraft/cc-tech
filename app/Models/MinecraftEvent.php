@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Orchid\Filters\Filterable;
 use Orchid\Screen\AsSource;
 
 /**
@@ -14,7 +15,7 @@ use Orchid\Screen\AsSource;
  *
  * @property int                $id
  * @property string             $event_type
- * @property array              $context
+ * @property string             $context
  * @property MinecraftAccount   $minecraftAccount
  * @property Carbon             $created_at
  * @property Carbon             $updated_at
@@ -22,17 +23,9 @@ use Orchid\Screen\AsSource;
  */
 class MinecraftEvent extends Model
 {
-    use HasFactory, AsSource, SoftDeletes;
+    use HasFactory, AsSource, SoftDeletes, Filterable;
 
-    protected function context(): Attribute
-    {
-        return Attribute::make(
-            get: fn (string $value) => json_decode($value),
-            set: fn (array $value) => json_encode($value)
-        );
-    }
-
-    public function MinecraftAccount(): BelongsTo
+    public function minecraftAccount(): BelongsTo
     {
         return $this->belongsTo(MinecraftAccount::class);
     }

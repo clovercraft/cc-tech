@@ -106,7 +106,10 @@ class ServersScreen extends Screen
             'type'  => 'required|in:vanilla,forge,fabric'
         ]);
 
-        $server = new Server($request->all());
+        $properties = $request->all();
+        $properties['api_key'] = fake()->uuid();
+
+        $server = new Server($properties);
         $server->save();
     }
 }

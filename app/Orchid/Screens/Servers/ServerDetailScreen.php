@@ -6,6 +6,7 @@ use App\Models\Plugin;
 use App\Models\Server;
 use App\Orchid\Layouts\Plugins\PluginsTableLayout;
 use Illuminate\Http\Request;
+use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Screen;
@@ -49,7 +50,9 @@ class ServerDetailScreen extends Screen
             ModalToggle::make('Manage Plugins')
                 ->modal('managePluginsModal')
                 ->method('savePlugins')
-                ->icon('bs.plus')
+                ->icon('bs.plus'),
+            Button::make('Reset Token')
+                ->method('resetServerToken'),
         ];
     }
 
@@ -86,5 +89,11 @@ class ServerDetailScreen extends Screen
         foreach ($plugins as $plugin_id) {
             $this->server->plugins()->attach($plugin_id);
         }
+    }
+
+    public function resetServerToken(): void
+    {
+        $this->server->api_key = fake()->uuid();
+        $this->server->save();
     }
 }
