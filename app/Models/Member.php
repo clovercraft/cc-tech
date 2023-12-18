@@ -33,6 +33,10 @@ class Member extends Model
 {
     use HasFactory, AsSource, SoftDeletes, Filterable;
 
+    public const STATUS_ACTIVE = 'active';
+    public const STATUS_WHITELISTED = 'whitelisted';
+    public const STATUS_INACTIVE = 'inactive';
+
     protected $fillable = [
         'discord_id',
         'name',
