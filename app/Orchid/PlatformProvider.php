@@ -114,11 +114,8 @@ class PlatformProvider extends OrchidServiceProvider
     {
         return [
             ItemPermission::group(__('Members'))
-                ->addPermission('member.view',    __('View'))
-                ->addPermission('member.create',  __('Create'))
-                ->addPermission('member.edit',    __('Edit'))
                 ->addPermission('member.manage', __('Manage'))
-                ->addPermission('member.delete',  __('Delete')),
+                ->addPermission('member.manage-self', __('Manage Self')),
 
             ItemPermission::group(__('Content Manager'))
                 ->addPermission('content.edit', __('Edit'))
