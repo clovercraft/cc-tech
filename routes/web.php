@@ -35,5 +35,4 @@ Route::controller(DiscordAuthController::class)->group(function () {
 
 Route::controller(MinecraftApiController::class)->group(function () {
     Route::post('/mcevents/log', 'event_hook');
-    Route::post('/mcevents/global', 'global_event_hook');
 });

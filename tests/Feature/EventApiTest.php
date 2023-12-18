@@ -47,7 +47,7 @@ class EventApiTest extends TestCase
 
     public function test_shutdown_event(): void
     {
-        $response = $this->post('/mcevents/global', [
+        $response = $this->post('/mcevents/log', [
             'event_type'    => 'shutdown',
             'api_token'     => $this->server->api_key
         ]);
@@ -55,7 +55,8 @@ class EventApiTest extends TestCase
         $response->assertStatus(200);
 
         $this->assertDatabaseHas('minecraft_events', [
-            'event_type'            => 'shutdown',
+            'event_type'    => 'shutdown',
+            'server_id'     => $this->server->id
         ]);
     }
 }
