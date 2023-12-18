@@ -11,6 +11,8 @@ use Illuminate\Support\Collection;
  *
  * This class provides a static interface for interacting with the Minecraft Player DB API.
  *
+ * @method static array getAccount(string $id)
+ *
  */
 class Minecraft extends Facade
 {

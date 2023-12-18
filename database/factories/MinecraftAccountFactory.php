@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\DiscordMember;
+use App\Models\Member;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,7 @@ class MinecraftAccountFactory extends Factory
     public function definition(): array
     {
         return [
-            'discord_member_id' => DiscordMember::factory()->create(),
+            'member_id'         => Member::factory()->create(),
             'name'              => fake()->userName(),
             'uuid'              => fake()->uuid(),
             'status'            => 'active'
