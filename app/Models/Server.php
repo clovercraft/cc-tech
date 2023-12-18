@@ -42,4 +42,9 @@ class Server extends Model
     {
         return $this->belongsToMany(Plugin::class);
     }
+
+    public function events(): HasMany
+    {
+        return $this->hasMany(MinecraftEvent::class);
+    }
 }

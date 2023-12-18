@@ -29,4 +29,9 @@ class MinecraftEvent extends Model
     {
         return $this->belongsTo(MinecraftAccount::class);
     }
+
+    public function server(): BelongsTo
+    {
+        return $this->belongsTo(Server::class);
+    }
 }

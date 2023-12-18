@@ -13,34 +13,23 @@ class MinecraftApiController extends Controller
     {
         $request->validate([
             'event_type'    => 'required|string',
-            'player_id'     => 'required|string',
+            'player_id'     => 'string',
             'api_token'     => 'required|exists:servers,api_key'
         ]);
 
-        $player = MinecraftAccount::where('uuid', $request->input('player_id'))->first();
+        $server = Server::where('api_key', $request->input('api_token'))->first();
 
         $event = new MinecraftEvent();
         $event->event_type = $request->input('event_type');
-        $event->context = json_decode($request->input('context', '[]'));
-        $player->minecraftEvents()->save($event);
+        $event->context = $request->input('context', '[]');
+        $server->events()->save($event);
+
+        if ($request->has('player_id')) {
+            $player = MinecraftAccount::where('uuid', $request->input('player_id'))->first();
+            $event->minecraftAccount()->associate($player);
+            $event->save();
+        }
 
         return response()->json(['success' => true, 'record' => json_encode($event->toArray())]);
-    }
-
-    public function global_event_hook(Request $request)
-    {
-        $request->validate([
-            'event_type'    => 'required|in:startup,shutdown',
-            'api_token'     => 'required|exists:servers,api_key',
-        ]);
-
-        $player = MinecraftAccount::first();
-
-        $event = new MinecraftEvent();
-        $event->event_type = $request->input('event_type');
-        $event->context = [];
-        $player->minecraftEvents()->save($event);
-
-        return response()->json(['success' => true]);
     }
 }
