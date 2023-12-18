@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Orchid\Screens\AppSettingsScreen;
 use App\Orchid\Screens\CredentialsScreen;
+use App\Orchid\Screens\MemberAccountScreen;
 use App\Orchid\Screens\Members\MemberDetailScreen;
 use App\Orchid\Screens\Members\MembersScreen;
 use App\Orchid\Screens\PagesScreen;
@@ -112,6 +113,12 @@ Route::screen('members', MembersScreen::class)
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
         ->push(__('Members'), route('platform.members')));
+
+Route::screen('me', MemberAccountScreen::class)
+    ->name('platform.member.self')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('My Account')));
 
 Route::screen('members/{member}', MemberDetailScreen::class)
     ->name('platform.member.details')

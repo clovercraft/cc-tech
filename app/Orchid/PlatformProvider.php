@@ -35,10 +35,10 @@ class PlatformProvider extends OrchidServiceProvider
     public function menu(): array
     {
         $menu = collect([
-            Menu::make('Get Started')
-                ->icon('bs.book')
-                ->title('Navigation')
-                ->route(config('platform.index')),
+            Menu::make('My Account')
+                ->icon('bs.person')
+                ->title('Account Management')
+                ->route('platform.member.self'),
         ]);
 
         if (Auth::user()->hasAccess('content.edit')) {
