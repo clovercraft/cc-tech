@@ -20,7 +20,8 @@ class ServerFactory extends Factory
             'name'              => fake()->word(),
             'ip'                => fake()->domainName(),
             'type'              => 'vanilla',
-            'current_version'   => '1.20.1'
+            'current_version'   => '1.20.2',
+            'api_key'           => fake()->uuid(),
         ];
     }
 }

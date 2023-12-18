@@ -14,6 +14,10 @@
                     <td><strong>IP</strong></td>
                     <td>{{ $server->ip }}</td>
                 </tr>
+                <tr>
+                    <td><strong>Token</strong></td>
+                    <td>{{ $server->api_key }}</td>
+                </tr>
             </tbody>
         </table>
     </div>

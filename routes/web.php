@@ -3,6 +3,7 @@
 use App\Http\Controllers\PusherAuthController;
 use App\Http\Controllers\DiscordAuthController;
 use App\Http\Controllers\FrontController;
+use App\Http\Controllers\MinecraftApiController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -30,4 +31,9 @@ Route::controller(PusherAuthController::class)->group(function () {
 Route::controller(DiscordAuthController::class)->group(function () {
     Route::get('/oauth/initiate', 'discord_authenticate')->name('discord.authorize');
     Route::get('/oauth/return', 'discord_authorize');
+});
+
+Route::controller(MinecraftApiController::class)->group(function () {
+    Route::post('/mcevents/log', 'event_hook');
+    Route::post('/mcevents/global', 'global_event_hook');
 });

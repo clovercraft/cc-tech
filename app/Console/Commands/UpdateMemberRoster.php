@@ -29,12 +29,6 @@ class UpdateMemberRoster extends Command
      */
     public function handle()
     {
-        // check discord auth
-        if (!Discord::has_authorization()) {
-            $this->error("Discord API has not been authenticated for this instance.");
-            return Command::FAILURE;
-        }
-
         $this->info("Pulling roster from Discord");
         $members = Discord::get_members();
         $runtime = now();

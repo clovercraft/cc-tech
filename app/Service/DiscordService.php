@@ -47,6 +47,7 @@ class DiscordService
 
         // check status
         $authentication = $this->checkAppStatus();
+        return $authentication->has('user');
         if ($authentication->has('user') && $authentication->has('expires')) {
             $expires = Carbon::parse($authentication->get('expires'));
             $diff = now()->diffInMinutes($expires, false);
@@ -111,17 +112,29 @@ class DiscordService
 
         $count = 50;
         $limit = 50;
+        $after = '';
+        $args = ['limit' => 100];
 
         while ($count >= $limit) {
-            $response = $this->bot_get($path, [
-                'limit' => 100
-            ]);
+            $response = $this->bot_get($path, $args);
             $entries = $response->collect();
             $members = $members->merge($entries);
             $count = $entries->count();
+            if ($count >= $limit) {
+                $args['after'] = $this->parseLastUser($entries);
+            }
         }
 
         return $members;
+    }
+
+    private function parseLastUser(Collection $entries): string
+    {
+        $users = $entries->filter(function ($entry) {
+            return key_exists('user', $entry);
+        });
+        $last = $users->last();
+        return $last['user']['id'];
     }
 
     public function getAuthToken(bool $refresh = false): string

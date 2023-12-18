@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Orchid\Screen\AsSource;
 
@@ -16,6 +17,7 @@ use Orchid\Screen\AsSource;
  * @property string         $status
  * @property Member         $member
  * @property Carbon|null    $whitelisted_at
+ * @property Collection     $minecraftEvents
  * @property Carbon         $created_at
  * @property Carbon         $updated_at
  * @property Carbon|null    $deleted_at
@@ -36,5 +38,10 @@ class MinecraftAccount extends Model
     public function member(): BelongsTo
     {
         return $this->belongsTo(Member::class);
+    }
+
+    public function minecraftEvents(): HasMany
+    {
+        return $this->hasMany(MinecraftEvent::class);
     }
 }
