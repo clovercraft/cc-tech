@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Orchid\Screen\AsSource;
@@ -32,6 +33,10 @@ use Orchid\Filters\Filterable;
 class Member extends Model
 {
     use HasFactory, AsSource, SoftDeletes, Filterable;
+
+    public const STATUS_ACTIVE = 'active';
+    public const STATUS_WHITELISTED = 'whitelisted';
+    public const STATUS_INACTIVE = 'inactive';
 
     protected $fillable = [
         'discord_id',
@@ -73,5 +78,10 @@ class Member extends Model
                 'lastseen_at'   => $runtime
             ]
         );
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

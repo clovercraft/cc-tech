@@ -31,6 +31,9 @@ Route::controller(PusherAuthController::class)->group(function () {
 Route::controller(DiscordAuthController::class)->group(function () {
     Route::get('/oauth/initiate', 'discord_authenticate')->name('discord.authorize');
     Route::get('/oauth/return', 'discord_authorize');
+
+    Route::get('/oauth/member/initiate', 'discord_member_auth')->name('discord.authorize-member');
+    Route::get('/oauth/member/return', 'discord_member_authorize');
 });
 
 Route::controller(MinecraftApiController::class)->group(function () {

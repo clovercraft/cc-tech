@@ -9,4 +9,9 @@ class FrontController extends Controller
     {
         return view('front.home');
     }
+
+    public function register()
+    {
+        return view('front.register');
+    }
 }

@@ -20,6 +20,16 @@ class MinecraftEventResource extends Resource
      */
     public static $model = \App\Models\MinecraftEvent::class;
 
+    public static function perPage(): int
+    {
+        return 25;
+    }
+
+    public static function permission(): ?string
+    {
+        return 'staff.members';
+    }
+
     /**
      * Get the fields displayed by the resource.
      *

@@ -49,7 +49,7 @@ class CredentialsScreen extends Screen
     {
         $bar = [];
 
-        if (Auth::user()->hasAccess('creds.create')) {
+        if (Auth::user()->hasAccess('staff.creds')) {
             $bar[] = ModalToggle::make('New Credential')
                 ->modal('addCredentialModal')
                 ->method('create')
@@ -78,7 +78,7 @@ class CredentialsScreen extends Screen
                                 ->icon('bs.eye'),
                         ];
 
-                        if (Auth::user()->hasAccess('creds.edit')) {
+                        if (Auth::user()->hasAccess('staff.creds')) {
                             $buttons[] = ModalToggle::make('edit')
                                 ->modal('editCredentialModal')
                                 ->asyncParameters(['id' => $credential->id])
@@ -86,7 +86,7 @@ class CredentialsScreen extends Screen
                                 ->icon('bs.');
                         }
 
-                        if (Auth::user()->hasAccess('creds.delete')) {
+                        if (Auth::user()->hasAccess('staff.creds')) {
                             $buttons[] = Button::make('delete')
                                 ->type(Color::DANGER)
                                 ->icon('bs.trash')

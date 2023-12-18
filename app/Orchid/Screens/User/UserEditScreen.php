@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Orchid\Screens\User;
 
+use App\Models\Member;
 use App\Orchid\Layouts\Role\RolePermissionLayout;
 use App\Orchid\Layouts\User\UserEditLayout;
+use App\Orchid\Layouts\User\UserMemberLayout;
 use App\Orchid\Layouts\User\UserPasswordLayout;
 use App\Orchid\Layouts\User\UserRoleLayout;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,9 +15,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Orchid\Access\Impersonation;
-use Orchid\Platform\Models\User;
+use App\Models\User;
 use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Button;
+use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Screen;
 use Orchid\Support\Color;
 use Orchid\Support\Facades\Layout;
@@ -35,7 +38,7 @@ class UserEditScreen extends Screen
      */
     public function query(User $user): iterable
     {
-        $user->load(['roles']);
+        $user->load(['roles', 'member']);
 
         return [
             'user'       => $user,
@@ -143,6 +146,20 @@ class UserEditScreen extends Screen
                         ->method('save')
                 ),
 
+            Layout::block(Layout::rows([
+                Relation::make('user.member')
+                    ->fromModel(Member::class, 'name')
+                    ->title('Select the member to link')
+            ]))
+                ->title(__('Member Account'))
+                ->description(__('Associate a member account with this user to manage Minecraft accounts'))
+                ->commands(
+                    Button::make(__('Save'))
+                        ->icon('bs.check-circle')
+                        ->canSee($this->user->exists)
+                        ->method('associateMember')
+                ),
+
         ];
     }
 
@@ -203,5 +220,16 @@ class UserEditScreen extends Screen
         Toast::info(__('You are now impersonating this user'));
 
         return redirect()->route(config('platform.index'));
+    }
+
+    public function associateMember(Request $request)
+    {
+        $request->validate([
+            'member'    => 'required|exists:members,id',
+        ]);
+
+        $member = Member::find($request->input('member'));
+        $member->user()->associate($this->user);
+        $member->save();
     }
 }

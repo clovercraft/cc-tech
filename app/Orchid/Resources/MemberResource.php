@@ -5,6 +5,9 @@ namespace App\Orchid\Resources;
 use Orchid\Crud\Resource;
 use Orchid\Screen\TD;
 use App\Models\Member;
+use App\Orchid\Filters\MemberHasMinecraftFilter;
+use App\Orchid\Filters\MembersNameFilter;
+use App\Orchid\Filters\MembersStatusFilter;
 use Orchid\Screen\Fields\DateTimer;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Sight;
@@ -25,7 +28,7 @@ class MemberResource extends Resource
 
     public static function permission(): ?string
     {
-        return 'member.manage';
+        return 'staff.members';
     }
 
     /**
@@ -43,7 +46,10 @@ class MemberResource extends Resource
             DateTimer::make('birthday')
                 ->title('Birthday')
                 ->format('m/d/Y')
-                ->allowInput()
+                ->allowInput(),
+            Input::make('status')
+                ->title('Status')
+                ->disabled(),
         ];
     }
 
@@ -55,22 +61,22 @@ class MemberResource extends Resource
     public function columns(): array
     {
         return [
-            TD::make('name')
-                ->sort(),
-            TD::make('pronouns')
-                ->sort(),
+            TD::make('name'),
+            TD::make('pronouns'),
             TD::make('birthday')
-                ->sort()
                 ->render(function (Member $member) {
                     if ($member->birthday == null) {
                         return '';
                     }
                     return $member->birthday->format('M d, Y');
                 }),
-            TD::make('status')
-                ->sort(),
+            TD::make('', 'Minecraft Account')
+                ->render(function (Member $member) {
+                    $account = $member->minecraftAccounts->pluck('name')->unique()->first();
+                    return $account;
+                }),
+            TD::make('status'),
             TD::make('lastseen_at', 'Last Seen')
-                ->sort()
                 ->render(function (Member $member) {
                     if ($member->lastseen_at == null) {
                         return '';
@@ -96,7 +102,11 @@ class MemberResource extends Resource
             Sight::make('status'),
             Sight::make('lastseen_at', 'Last Seen')
                 ->popover('The last time our API was able to verify this member in the Discord server.')
-                ->render(fn (Member $member) => empty($member->lastseen_at) ? 'never' : $member->lastseen_at->toDateTimeString())
+                ->render(fn (Member $member) => empty($member->lastseen_at) ? 'never' : $member->lastseen_at->toDateTimeString()),
+            Sight::make('minecraftAccounts', 'Minecraft Accounts')
+                ->render(function (Member $member) {
+                    return implode(', ', $member->minecraftAccounts->pluck('name')->toArray());
+                })
         ];
     }
 
@@ -107,6 +117,10 @@ class MemberResource extends Resource
      */
     public function filters(): array
     {
-        return [];
+        return [
+            MembersNameFilter::class,
+            MembersStatusFilter::class,
+            MemberHasMinecraftFilter::class,
+        ];
     }
 }

@@ -35,40 +35,45 @@ class PlatformProvider extends OrchidServiceProvider
     public function menu(): array
     {
         $menu = collect([
-            Menu::make('Get Started')
-                ->icon('bs.book')
-                ->title('Navigation')
+            Menu::make('Dashboard')
+                ->icon('bs.house')
                 ->route(config('platform.index')),
+            Menu::make('My Account')
+                ->icon('bs.person')
+                ->route('platform.member.self'),
         ]);
 
-        if (Auth::user()->hasAccess('content.edit')) {
-            $menu->push(
-                Menu::make('Pages')
-                    ->icon('bs.page')
-                    ->route('platform.pages')
-                    ->title('Content Manager')
-            );
-        }
-
-        if (Auth::user()->hasAccess('tech.view')) {
+        if (Auth::user()->hasAccess('staff.default')) {
             $menu->push(
                 Menu::make('Servers')
                     ->icon('bs.server')
                     ->route('platform.servers')
-                    ->title('Technical Assets'),
-
+                    ->title('Staff Tools'),
                 Menu::make('Plugins')
                     ->icon('bs.plugin')
                     ->route('platform.plugins'),
+                Menu::make('Pages')
+                    ->icon('bs.files')
+                    ->route('platform.pages'),
             );
         }
 
-        if (Auth::user()->hasAccess('creds.view')) {
+        if (Auth::user()->hasAccess('staff.creds')) {
             $menu->push(
                 Menu::make('Credentials')
                     ->icon('bs.lock')
                     ->route('platform.credentials')
-                    ->title('Secrets Manager')
+            );
+        }
+
+        if (Auth::user()->hasAccess('staff.system')) {
+            $menu->push(
+                Menu::make(__('Application Settings'))
+                    ->icon('bs.gear-wide-connected')
+                    ->route('staff.system'),
+                Menu::make(__('Task Scheduler'))
+                    ->icon('bs.stopwatch')
+                    ->url('/totem')
             );
         }
 
@@ -78,27 +83,13 @@ class PlatformProvider extends OrchidServiceProvider
                     ->icon('bs.people')
                     ->route('platform.systems.users')
                     ->permission('platform.systems.users')
-                    ->title(__('Tool Admin')),
+                    ->title(__('User Admin')),
 
                 Menu::make(__('Roles'))
                     ->icon('bs.shield')
                     ->route('platform.systems.roles')
                     ->permission('platform.systems.roles')
                     ->divider()
-            );
-        }
-
-        if (Auth::user()->hasAccess('platform.systems.settings')) {
-            $menu->push(
-                Menu::make(__('Application Settings'))
-                    ->icon('bs.gear-wide-connected')
-                    ->route('platform.systems.settings')
-                    ->permission('platform.systems.settings')
-                    ->title(__('Site Settings')),
-                Menu::make(__('Task Scheduler'))
-                    ->icon('bs.stopwatch')
-                    ->url('/totem')
-                    ->permission('platform.systems.scheduler')
             );
         }
 
@@ -113,35 +104,23 @@ class PlatformProvider extends OrchidServiceProvider
     public function permissions(): array
     {
         return [
-            ItemPermission::group(__('Members'))
-                ->addPermission('member.view',    __('View'))
-                ->addPermission('member.create',  __('Create'))
-                ->addPermission('member.edit',    __('Edit'))
-                ->addPermission('member.manage', __('Manage'))
-                ->addPermission('member.delete',  __('Delete')),
+            ItemPermission::group(__('Member Components'))
+                ->addPermission('member.self', __('Default Permissions'))
+                ->addPermission('member.assets', __('Upload Assets'))
+                ->addPermission('member.news', __('View Announcements')),
 
-            ItemPermission::group(__('Content Manager'))
-                ->addPermission('content.edit', __('Edit'))
-                ->addPermission('content.create', __('Create'))
-                ->addPermission('content.delete', __('Delete')),
-
-            ItemPermission::group(__('Technical Assets'))
-                ->addPermission('tech.view',    __('View'))
-                ->addPermission('tech.create',  __('Create'))
-                ->addPermission('tech.edit',    __('Edit'))
-                ->addPermission('tech.delete',  __('Delete')),
-
-            ItemPermission::group(__('Credentials'))
-                ->addPermission('creds.view',    __('View'))
-                ->addPermission('creds.create',  __('Create'))
-                ->addPermission('creds.edit',    __('Edit'))
-                ->addPermission('creds.delete',  __('Delete')),
+            ItemPermission::group(__('Staff Components'))
+                ->addPermission('staff.default', __('Default Permissions'))
+                ->addPermission('staff.members', __('Manage Members'))
+                ->addPermission('staff.content', __('Manage Content'))
+                ->addPermission('staff.news', __('Manage Announcements'))
+                ->addPermission('staff.tech', __('Manage Technology'))
+                ->addPermission('staff.creds', __('Manage Credentials'))
+                ->addPermission('staff.system', __('HUB Site Settings')),
 
             ItemPermission::group(__('System'))
                 ->addPermission('platform.systems.roles', __('Roles'))
                 ->addPermission('platform.systems.users', __('Users'))
-                ->addPermission('platform.systems.settings', __('Settings'))
-                ->addPermission('platform.systems.scheduler', __('Scheduler')),
         ];
     }
 }
