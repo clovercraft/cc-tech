@@ -33,7 +33,7 @@ Route::controller(DiscordAuthController::class)->group(function () {
     Route::get('/oauth/return', 'discord_authorize');
 
     Route::get('/oauth/member/initiate', 'discord_member_auth')->name('discord.authorize-member');
-    Route::get('/oauth/member/return', 'discord_member_authorize');
+    Route::get('/oauth/member/return', 'discord_member_authorize')->name('discord.redirect-member');
 });
 
 Route::controller(MinecraftApiController::class)->group(function () {
