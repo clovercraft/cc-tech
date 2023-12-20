@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
 use Orchid\Platform\Models\Role;
+use Illuminate\Support\Str;
 
 class DiscordAuthController extends Controller
 {
@@ -39,7 +40,7 @@ class DiscordAuthController extends Controller
                 $record = new User();
                 $record->name = $user->name;
                 $record->email = $user->email;
-                $record->password = fake()->password(12);
+                $record->password = Str::password();
                 $record->save();
 
                 // grant basic perms
