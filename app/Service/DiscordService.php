@@ -25,12 +25,6 @@ class DiscordService
         $this->getRefreshToken(true);
     }
 
-    public function authorizeMember()
-    {
-        return Socialite::driver('discord')
-            ->redirect();
-    }
-
     public function authorize()
     {
         // https://discord.com/api/oauth2/authorize?client_id=1160334357899264021&permissions=8&response_type=code&redirect_uri=https%3A%2F%2Flocalhost%2Foauth%2Freturn&scope=bot+guilds.members.read+guilds
