@@ -52,9 +52,9 @@ class PlatformProvider extends OrchidServiceProvider
                 Menu::make('Plugins')
                     ->icon('bs.plugin')
                     ->route('platform.plugins'),
-                Menu::make('Pages')
-                    ->icon('bs.files')
-                    ->route('platform.pages'),
+                // Menu::make('Pages')
+                //     ->icon('bs.files')
+                //     ->route('platform.pages'),
             );
         }
 

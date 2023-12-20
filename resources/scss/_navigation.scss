@@ -1,3 +1,7 @@
+.navbar.bg-dark {
+    background-color: $black !important;
+}
+
 .navbar-brand img {
     height: 75px;
 }
@@ -5,7 +9,7 @@
 .nav-item a {
     font-family: 'righteous';
     font-size: 1.5em;
-    color: $black;
+    color: $white;
 
     &:hover {
         color: $mountain;
