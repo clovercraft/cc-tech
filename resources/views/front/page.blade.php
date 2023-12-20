@@ -1,6 +1,7 @@
 @extends('front.layout')
 
 @section('body')
-    <x-cms-banner :page="$page" />
-    <x-cms.page :page="$page" />
+    <main class="page-body">
+        <x-cms.page :page="$page" />
+    </main>
 @endsection

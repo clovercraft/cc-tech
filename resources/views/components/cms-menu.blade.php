@@ -1,6 +1,6 @@
-<div class="container">
-    <nav class="navbar navbar-expand-lg bg-transparent">
-        <div class="container-fluid">
+<div class="container-fluid">
+    <nav class="navbar navbar-expand-lg bg-dark">
+        <div class="container-xl">
             <a class="navbar-brand" href="{{ route('front.home') }}">
                 <img src="/img/logo.png" alt="Clovercraft">
             </a>
@@ -18,7 +18,7 @@
                 </ul>
                 <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('platform.login') }}">Admin Login</a>
+                        <a class="nav-link" href="{{ route('platform.login') }}">HUB Login</a>
                     </li>
                 </ul>
             </div>
