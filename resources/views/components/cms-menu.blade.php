@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <nav class="navbar navbar-expand-lg bg-dark">
+    <nav class="navbar navbar-dark navbar-expand-lg bg-dark">
         <div class="container-xl">
             <a class="navbar-brand" href="{{ route('front.home') }}">
                 <img src="/img/logo.png" alt="Clovercraft">

@@ -26,10 +26,12 @@ class CmsMenu extends Component
 
     private function setDefaultMenu(): void
     {
-        $this->items->push(new MenuItem(
-            route('front.home'),
-            'Home'
-        ));
+        $this->items->push(
+            new MenuItem(route('front.home'), 'Home'),
+            new MenuItem('https://wiki.clovercraft.gg', 'Wiki'),
+            new MenuItem('https://discord.gg/clovercraft', 'Discord'),
+            new MenuItem('https://www.patreon.com/clovercraft', 'Patreon')
+        );
     }
 
     private function preparePagesMenu(): void
