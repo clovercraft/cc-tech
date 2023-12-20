@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
+use Orchid\Platform\Models\Role;
 
 class DiscordAuthController extends Controller
 {
@@ -40,6 +41,12 @@ class DiscordAuthController extends Controller
                 $record->email = $user->email;
                 $record->password = fake()->password(12);
                 $record->save();
+
+                // grant basic perms
+                $role = Role::where('slug', 'member')->first();
+                $record->addRole($role);
+                $record->save();
+                $record->refresh();
             }
             $member->user()->associate($record);
             $member->save();
