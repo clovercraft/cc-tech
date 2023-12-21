@@ -12,6 +12,7 @@ use Orchid\Screen\AsSource;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Orchid\Filters\Filterable;
+use Orchid\Platform\Concerns\Sortable;
 
 /**
  * Member model
@@ -33,7 +34,7 @@ use Orchid\Filters\Filterable;
  */
 class Member extends Model
 {
-    use HasFactory, AsSource, SoftDeletes, Filterable;
+    use HasFactory, AsSource, SoftDeletes, Filterable, Sortable;
 
     public const STATUS_ACTIVE = 'active';
     public const STATUS_WHITELISTED = 'whitelisted';
@@ -57,6 +58,21 @@ class Member extends Model
             fn (?string $value) => $value == null ? null : Carbon::parse($value)->format('m/d/Y'),
             fn ($value) => $value instanceof Carbon ? $value->toDateString() : Carbon::parse($value)->toDateString()
         );
+    }
+
+    protected function playerTag(): Attribute
+    {
+        return Attribute::make(
+            function ($value, $attributes) {
+                $account = MinecraftAccount::where('member_id', $attributes['id'])->first();
+                return empty($account) ? '' : $account->name;
+            }
+        );
+    }
+
+    public function getSortColumnName(): string
+    {
+        return 'id';
     }
 
     public function minecraftAccounts(): HasMany

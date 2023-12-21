@@ -5,8 +5,7 @@ declare(strict_types=1);
 use App\Orchid\Screens\AppSettingsScreen;
 use App\Orchid\Screens\CredentialsScreen;
 use App\Orchid\Screens\MemberAccountScreen;
-use App\Orchid\Screens\Members\MemberDetailScreen;
-use App\Orchid\Screens\Members\MembersScreen;
+use App\Orchid\Screens\MemberListingScreen;
 use App\Orchid\Screens\PagesScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\PluginsScreen;
@@ -108,7 +107,7 @@ Route::screen('credentials', CredentialsScreen::class)
         ->parent('platform.index')
         ->push(__('Credentials'), route('platform.credentials')));
 
-Route::screen('members', MembersScreen::class)
+Route::screen('members', MemberListingScreen::class)
     ->name('platform.members')
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
@@ -119,12 +118,6 @@ Route::screen('me', MemberAccountScreen::class)
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
         ->push(__('My Account')));
-
-Route::screen('members/{member}', MemberDetailScreen::class)
-    ->name('platform.member.details')
-    ->breadcrumbs(fn (Trail $trail) => $trail
-        ->parent('platform.members')
-        ->push(__('Detail View')));
 
 Route::screen('settings', AppSettingsScreen::class)
     ->name('staff.system')

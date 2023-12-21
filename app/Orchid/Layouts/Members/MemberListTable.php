@@ -5,6 +5,7 @@ namespace App\Orchid\Layouts\Members;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
 use App\Models\Member;
+use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\Link;
 use Orchid\Support\Facades\Layout;
 
@@ -28,34 +29,18 @@ class MemberListTable extends Table
     protected function columns(): iterable
     {
         return [
-            TD::make('name')
+            TD::make('name', 'Discord Name')
                 ->sort(),
-            TD::make('pronouns')
+            TD::make('pronouns', 'Pronouns'),
+            TD::make('playerTag', 'Player Tag')
                 ->sort(),
-            TD::make('birthday')
-                ->sort()
-                ->render(function (Member $member) {
-                    if ($member->birthday == null) {
-                        return '';
-                    }
-                    return $member->birthday->format('M d, Y');
-                }),
-            TD::make('status')
+            TD::make('birthday', 'Birthday')
                 ->sort(),
-            TD::make('lastseen_at', 'Last Seen')
-                ->sort()
-                ->render(function (Member $member) {
-                    if ($member->lastseen_at == null) {
-                        return '';
-                    }
-                    return $member->lastseen_at->toDateTimeString();
-                }),
             TD::make()
-                ->render(function (Member $member) {
-                    return Link::make('view')
-                        ->icon('bs.eye')
-                        ->route('platform.member.details', ['member' => $member]);
-                })
+                ->render(fn ($member) =>
+                Button::make('View')
+                    ->icon('bs.eye')
+                    ->method())
         ];
     }
 }
