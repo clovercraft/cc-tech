@@ -3,6 +3,7 @@
 namespace App\Orchid\Screens;
 
 use App\Facades\Minecraft;
+use App\Jobs\MinecraftAccountCreated;
 use App\Models\Member;
 use App\Models\MinecraftAccount;
 use Illuminate\Http\Request;
@@ -114,6 +115,8 @@ class MemberAccountScreen extends Screen
         $record->uuid = $account['id'];
         $record->status = MinecraftAccount::ACTIVE;
         $this->member->minecraftAccounts()->save($record);
+
+        MinecraftAccountCreated::dispatchSync($record);
 
         Toast::success("Account saved!");
     }
