@@ -2,15 +2,19 @@
 
 namespace App\Orchid\Screens\Servers;
 
+use App\Jobs\ExportWhitelist;
 use App\Models\Plugin;
 use App\Models\Server;
 use App\Orchid\Layouts\Plugins\PluginsTableLayout;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\ModalToggle;
+use Orchid\Screen\Fields\CheckBox;
 use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Screen;
+use Orchid\Screen\Sight;
 use Orchid\Support\Facades\Layout;
+use Orchid\Support\Facades\Toast;
 
 class ServerDetailScreen extends Screen
 {
@@ -51,6 +55,10 @@ class ServerDetailScreen extends Screen
                 ->modal('managePluginsModal')
                 ->method('savePlugins')
                 ->icon('bs.plus'),
+            ModalToggle::make('Manage Whitelist')
+                ->modal('manageWhitelistModal')
+                ->method('saveWhitelistConfig')
+                ->icon('bs.toggles'),
             Button::make('Reset Token')
                 ->method('resetServerToken'),
         ];
@@ -64,7 +72,14 @@ class ServerDetailScreen extends Screen
     public function layout(): iterable
     {
         return [
-            Layout::view('partials.platform.serverDetails'),
+            Layout::legend('server', [
+                Sight::make('type'),
+                Sight::make('current_version'),
+                Sight::make('ip'),
+                Sight::make('api_key'),
+                Sight::make('whitelist_active', 'Whitelist Active')
+                    ->render(fn ($server) => $server->whitelist_active ? 'Yes' : 'No')
+            ]),
             PluginsTableLayout::class,
             Layout::modal('managePluginsModal', [
                 Layout::rows([
@@ -75,7 +90,19 @@ class ServerDetailScreen extends Screen
                 ])
             ])
                 ->title('Manage Server Plugins')
-                ->applyButton('Save')
+                ->applyButton('Save'),
+            Layout::modal('manageWhitelistModal', [
+                Layout::rows([
+                    CheckBox::make('server.whitelist_active')
+                        ->title('Whitelist Active')
+                        ->sendTrueOrFalse(),
+                    CheckBox::make('run_export')
+                        ->title('Run Export')
+                        ->sendTrueOrFalse(),
+                ])
+            ])
+                ->title('Server Whitelist Config')
+                ->applyButton('Save'),
         ];
     }
 
@@ -95,5 +122,24 @@ class ServerDetailScreen extends Screen
     {
         $this->server->api_key = fake()->uuid();
         $this->server->save();
+    }
+
+    public function saveWhitelistConfig(Request $request)
+    {
+        $request->validate([
+            'server.whitelist_active'   => 'required',
+            'run_export'                => 'required'
+        ]);
+
+        $whitelist = (int) $request->input('server.whitelist_active') > 0;
+        $export = (int) $request->input('run_export') > 0;
+
+        $this->server->whitelist_active = $whitelist;
+        $this->server->save();
+
+        if ($whitelist && $export) {
+            ExportWhitelist::dispatchSync($this->server);
+            Toast::success("Whitelist has been exported!");
+        }
     }
 }

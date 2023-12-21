@@ -2,8 +2,8 @@
 
 namespace App\Events;
 
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -12,16 +12,18 @@ class SmpSignal implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public string $signalName = '';
-    public array $signalArgs = [];
+    public string $token = '';
+    public string $name = '';
+    public array $args = [];
 
     /**
      * Create a new event instance.
      */
-    public function __construct(string $signalName, array $signalArgs)
+    public function __construct(string $signalName, array $signalArgs, string $token)
     {
-        $this->signalName = $signalName;
-        $this->signalArgs = $signalArgs;
+        $this->token = $token;
+        $this->name = $signalName;
+        $this->args = $signalArgs;
     }
 
     /**
@@ -33,7 +35,12 @@ class SmpSignal implements ShouldBroadcastNow
     {
         $channel = env('SMP_RELAY_CHANNEL');
         return [
-            new PrivateChannel($channel),
+            new Channel($channel),
         ];
+    }
+
+    public function broadcastAs(): string
+    {
+        return 'smpSignal';
     }
 }
