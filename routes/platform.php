@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Orchid\Screens\AnnouncementsScreen;
+use App\Orchid\Screens\AnnouncementViewScreen;
 use App\Orchid\Screens\AppSettingsScreen;
 use App\Orchid\Screens\CredentialsScreen;
 use App\Orchid\Screens\MemberAccountScreen;
@@ -130,3 +132,15 @@ Route::screen('pages', PagesScreen::class)
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
         ->push(__('Content Manager')));
+
+Route::screen('announcements', AnnouncementsScreen::class)
+    ->name('platform.announcements')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Announcements')));
+
+Route::screen('announcements/{announcement:slug}', AnnouncementViewScreen::class)
+    ->name('platform.announcements.view')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.announcements')
+        ->push('view'));

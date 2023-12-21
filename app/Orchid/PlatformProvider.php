@@ -41,6 +41,9 @@ class PlatformProvider extends OrchidServiceProvider
             Menu::make('My Account')
                 ->icon('bs.person')
                 ->route('platform.member.self'),
+            Menu::make('Announcements')
+                ->icon('bs.newspaper')
+                ->route('platform.announcements'),
             // Menu::make('Members')
             //     ->icon('bs.people')
             //     ->route('platform.members'),
