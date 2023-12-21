@@ -225,10 +225,10 @@ class UserEditScreen extends Screen
     public function associateMember(Request $request)
     {
         $request->validate([
-            'member'    => 'required|exists:members,id',
+            'user.member'    => 'required|exists:members,id',
         ]);
 
-        $member = Member::find($request->input('member'));
+        $member = Member::find($request->input('user.member'));
         $member->user()->associate($this->user);
         $member->save();
     }

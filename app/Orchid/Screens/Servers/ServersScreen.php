@@ -5,6 +5,7 @@ namespace App\Orchid\Screens\Servers;
 use App\Models\Server;
 use App\Orchid\Layouts\Servers\ServersTableLayout;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Select;
@@ -107,7 +108,7 @@ class ServersScreen extends Screen
         ]);
 
         $properties = $request->all();
-        $properties['api_key'] = fake()->uuid();
+        $properties['api_key'] = Str::uuid();
 
         $server = new Server($properties);
         $server->save();
