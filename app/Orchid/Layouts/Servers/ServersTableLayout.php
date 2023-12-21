@@ -2,10 +2,12 @@
 
 namespace App\Orchid\Layouts\Servers;
 
+use Orchid\Icons\IconComponent;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
+use Orchid\Support\Facades\Layout;
 
 class ServersTableLayout extends Table
 {
@@ -36,11 +38,15 @@ class ServersTableLayout extends Table
      */
     protected function columns(): iterable
     {
+        $whitelistOn = (new IconComponent('bs.check-circle'))->render()();
+        $whitelistOff = (new IconComponent('bs.x-circle'))->render()();
         return [
             TD::make('name'),
             TD::make('ip', 'IP'),
             TD::make('type', 'Format'),
             TD::make('current_version', 'Version'),
+            TD::make('whitelist_active', 'Whitelist Enabled')
+                ->render(fn ($server) => $server->whitelist_active ? $whitelistOn : $whitelistOff),
             TD::make('')
                 ->render(fn ($server) => Link::make('view')
                     ->route('platform.server.details', ['server' => $server])
