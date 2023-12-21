@@ -2,8 +2,13 @@
 
 namespace App\Orchid\Resources;
 
+use App\Events\AnnouncementSaved;
 use App\Models\Announcement;
+use App\Models\Member;
+use App\Notifications\NewAnnouncement;
+use Illuminate\Database\Eloquent\Model;
 use Orchid\Crud\Resource;
+use Orchid\Crud\ResourceRequest;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Quill;
 use Orchid\Screen\Fields\Select;
@@ -65,17 +70,10 @@ class AnnouncementsResource extends Resource
     public function columns(): array
     {
         return [
-            TD::make('id'),
-
-            TD::make('created_at', 'Date of creation')
-                ->render(function ($model) {
-                    return $model->created_at->toDateTimeString();
-                }),
-
-            TD::make('updated_at', 'Update date')
-                ->render(function ($model) {
-                    return $model->updated_at->toDateTimeString();
-                }),
+            TD::make('title'),
+            TD::make('updated_at', 'Publish Date')
+                ->render(fn ($model) => $model->updated_at->format('d M, Y')),
+            TD::make('status', 'Status')
         ];
     }
 
@@ -97,5 +95,30 @@ class AnnouncementsResource extends Resource
     public function filters(): array
     {
         return [];
+    }
+
+    public function onSave(ResourceRequest $request, Model $model)
+    {
+        $model->forceFill($request->all())->save();
+
+        $announcement = $model;
+        if ($announcement->status == 'published' && $announcement->notice_sent == false) {
+            $this->sendNotice($announcement);
+            $announcement->notice_sent = true;
+            $announcement->save();
+        }
+    }
+
+    private function sendNotice(Announcement $announcement)
+    {
+        $notice = new NewAnnouncement($announcement);
+        $members = Member::where('status', 'active')->whereHas('minecraftAccounts')->whereHas('user')->get();
+        foreach ($members as $member) {
+            $user = $member->user;
+            if (empty($user)) {
+                continue;
+            }
+            $user->notify($notice);
+        }
     }
 }

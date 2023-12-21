@@ -26,7 +26,7 @@ class AnnouncementsScreen extends Screen
     public function query(): iterable
     {
         return [
-            'announcements' => Announcement::all(),
+            'announcements' => Announcement::where('status', 'published')->paginate(),
         ];
     }
 

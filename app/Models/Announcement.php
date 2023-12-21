@@ -20,6 +20,7 @@ use Orchid\Filters\Filterable;
  * @property    string      $content
  * @property    Collection  $tags
  * @property    string      $status
+ * @property    bool        $notice_sent
  * @property    Carbon      $deleted_at
  * @property    Carbon      $created_at
  * @property    Carbon      $updated_at
@@ -37,6 +38,7 @@ class Announcement extends Model
     ];
 
     protected $casts = [
-        'tags'  => AsCollection::class
+        'tags'  => AsCollection::class,
+        'notice_sent'   => 'boolean'
     ];
 }
