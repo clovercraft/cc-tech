@@ -7,6 +7,7 @@ use App\Models\Plugin;
 use App\Models\Server;
 use App\Orchid\Layouts\Plugins\PluginsTableLayout;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\CheckBox;
@@ -120,7 +121,7 @@ class ServerDetailScreen extends Screen
 
     public function resetServerToken(): void
     {
-        $this->server->api_key = fake()->uuid();
+        $this->server->api_key = Str::uuid();
         $this->server->save();
     }
 
