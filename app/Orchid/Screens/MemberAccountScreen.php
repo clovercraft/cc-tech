@@ -6,6 +6,8 @@ use App\Facades\Minecraft;
 use App\Jobs\MinecraftAccountCreated;
 use App\Models\Member;
 use App\Models\MinecraftAccount;
+use App\Orchid\Inputs\CustomInput;
+use App\Orchid\Inputs\Pronouns;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -78,7 +80,7 @@ class MemberAccountScreen extends Screen
             Layout::block([
                 Layout::legend('member', [
                     Sight::make('birthday', 'Birthday'),
-                    Sight::make('pronouns', 'Pronouns'),
+                    Sight::make('displayPronouns', 'Pronouns'),
                     Sight::make('bio', 'About Me')
                 ])
             ])
@@ -115,27 +117,8 @@ class MemberAccountScreen extends Screen
                 ->title('Add Minecraft Account'),
             Layout::modal('editBioModal', [
                 Layout::rows([
-                    DateTimer::make('member.birthday')
-                        ->title('Birthday')
-                        ->help('Please provide your birthdate. Format is mm/dd/yyyy')
-                        ->required()
-                        ->allowInput()
-                        ->format('m/d/Y'),
-                    Select::make('member.pronouns')
-                        ->title('Pronouns')
-                        ->help('Please select a set of pronouns. If your pronouns are not listed, you can also type in your own')
-                        ->required()
-                        ->allowAdd()
-                        ->options([
-                            'sheher'    => 'She/Her',
-                            'shethey'   => 'She/They',
-                            'theythem'  => 'They/Them',
-                            'hehim'     => 'He/Him',
-                            'hethey'    => 'He/They',
-                            'itits'     => 'It/Its',
-                            'any'       => 'Any Pronouns',
-                        ])
-                        ->empty('--'),
+                    CustomInput::birthday(),
+                    CustomInput::pronouns(),
                     TextArea::make('member.bio')
                         ->title('About Me')
                         ->help('Optional, tell us a bit about you!')

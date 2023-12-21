@@ -60,7 +60,7 @@ class MemberListingScreen extends Screen
             Layout::table('members', [
                 TD::make('name', 'Discord Name')
                     ->sort(),
-                TD::make('pronouns', 'Pronouns'),
+                TD::make('displayPronouns', 'Pronouns'),
                 TD::make('playerTag', 'Player Tag')
                     ->sort(),
                 TD::make('birthday', 'Birthday')

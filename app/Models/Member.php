@@ -70,6 +70,29 @@ class Member extends Model
         );
     }
 
+    protected function displayPronouns(): Attribute
+    {
+        return Attribute::make(
+            function ($value, $attributes) {
+                $options = collect([
+                    'sheher'    => 'She/Her',
+                    'shethey'   => 'She/They',
+                    'theythem'  => 'They/Them',
+                    'hehim'     => 'He/Him',
+                    'hethey'    => 'He/They',
+                    'itits'     => 'It/Its',
+                    'any'       => 'Any Pronouns',
+                ]);
+
+                if (empty($attributes['pronouns'])) {
+                    return '';
+                }
+
+                return $options->get($attributes['pronouns'], $attributes['pronouns']);
+            }
+        );
+    }
+
     public function getSortColumnName(): string
     {
         return 'id';
