@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -47,9 +48,16 @@ class Member extends Model
     ];
 
     protected $casts = [
-        'birthday' => 'date:Carbon',
         'lastseen_at'   => 'date:Carbon'
     ];
+
+    protected function birthday(): Attribute
+    {
+        return Attribute::make(
+            fn (?string $value) => $value == null ? null : Carbon::parse($value)->format('m/d/Y'),
+            fn ($value) => $value instanceof Carbon ? $value->toDateString() : Carbon::parse($value)->toDateString()
+        );
+    }
 
     public function minecraftAccounts(): HasMany
     {

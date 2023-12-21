@@ -63,13 +63,7 @@ class MemberResource extends Resource
         return [
             TD::make('name'),
             TD::make('pronouns'),
-            TD::make('birthday')
-                ->render(function (Member $member) {
-                    if ($member->birthday == null) {
-                        return '';
-                    }
-                    return $member->birthday->format('M d, Y');
-                }),
+            TD::make('birthday'),
             TD::make('', 'Minecraft Account')
                 ->render(function (Member $member) {
                     $account = $member->minecraftAccounts->pluck('name')->unique()->first();
