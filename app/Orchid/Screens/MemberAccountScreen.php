@@ -6,12 +6,19 @@ use App\Facades\Minecraft;
 use App\Jobs\MinecraftAccountCreated;
 use App\Models\Member;
 use App\Models\MinecraftAccount;
+use App\Orchid\Inputs\CustomInput;
+use App\Orchid\Inputs\Pronouns;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\ModalToggle;
+use Orchid\Screen\Fields\DateTimer;
 use Orchid\Screen\Fields\Input;
+use Orchid\Screen\Fields\Select;
+use Orchid\Screen\Fields\TextArea;
 use Orchid\Screen\Screen;
+use Orchid\Screen\Sight;
 use Orchid\Screen\TD;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
@@ -71,6 +78,21 @@ class MemberAccountScreen extends Screen
     {
         return [
             Layout::block([
+                Layout::legend('member', [
+                    Sight::make('birthday', 'Birthday'),
+                    Sight::make('displayPronouns', 'Pronouns'),
+                    Sight::make('bio', 'About Me')
+                ])
+            ])
+                ->title('Member Profile')
+                ->description('These help us know more about our members. We ask that all players please provide their birthday and pronouns.')
+                ->commands([
+                    ModalToggle::make('Edit Bio')
+                        ->icon('bs.pencil')
+                        ->modal('editBioModal')
+                        ->method('updateBio')
+                ]),
+            Layout::block([
                 Layout::table('accounts', [
                     TD::make('name'),
                     TD::make('status')
@@ -92,7 +114,17 @@ class MemberAccountScreen extends Screen
                         ->help('This must be a Java edition Minecraft username.')
                 ])
             ])
-                ->title('Add Minecraft Account')
+                ->title('Add Minecraft Account'),
+            Layout::modal('editBioModal', [
+                Layout::rows([
+                    CustomInput::birthday(),
+                    CustomInput::pronouns(),
+                    TextArea::make('member.bio')
+                        ->title('About Me')
+                        ->help('Optional, tell us a bit about you!')
+                        ->rows(5),
+                ])
+            ])
         ];
     }
 
@@ -101,6 +133,11 @@ class MemberAccountScreen extends Screen
         $request->validate([
             'username'  => 'required',
         ]);
+
+        if (empty($this->member->birthday) || empty($this->member->pronouns)) {
+            Toast::error("Please provide your birthday and pronouns before adding an account.");
+            return;
+        }
 
         $username = $request->input('username');
         $account = Minecraft::getAccount($username);
@@ -119,5 +156,19 @@ class MemberAccountScreen extends Screen
         MinecraftAccountCreated::dispatchSync($record);
 
         Toast::success("Account saved!");
+    }
+
+    public function updateBio(Request $request): void
+    {
+        $request->validate([
+            'member.birthday'   => 'required|date',
+            'member.pronouns'   => 'required|string',
+        ]);
+
+        $this->member->bio = $request->input('member.bio', '');
+        $this->member->birthday = Carbon::parse($request->input('member.birthday'));
+        $this->member->pronouns = $request->input('member.pronouns');
+        $this->member->save();
+        Toast::success("Bio updated!");
     }
 }

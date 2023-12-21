@@ -41,6 +41,9 @@ class PlatformProvider extends OrchidServiceProvider
             Menu::make('My Account')
                 ->icon('bs.person')
                 ->route('platform.member.self'),
+            // Menu::make('Members')
+            //     ->icon('bs.people')
+            //     ->route('platform.members'),
         ]);
 
         if (Auth::user()->hasAccess('staff.default')) {

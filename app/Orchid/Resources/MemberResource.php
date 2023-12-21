@@ -8,6 +8,7 @@ use App\Models\Member;
 use App\Orchid\Filters\MemberHasMinecraftFilter;
 use App\Orchid\Filters\MembersNameFilter;
 use App\Orchid\Filters\MembersStatusFilter;
+use App\Orchid\Inputs\CustomInput;
 use Orchid\Screen\Fields\DateTimer;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Sight;
@@ -41,12 +42,8 @@ class MemberResource extends Resource
         return [
             Input::make('name')
                 ->title('Member name'),
-            Input::make('pronouns')
-                ->title('Pronouns'),
-            DateTimer::make('birthday')
-                ->title('Birthday')
-                ->format('m/d/Y')
-                ->allowInput(),
+            CustomInput::pronouns('pronouns'),
+            CustomInput::birthday('birthday'),
             Input::make('status')
                 ->title('Status')
                 ->disabled(),
@@ -62,14 +59,8 @@ class MemberResource extends Resource
     {
         return [
             TD::make('name'),
-            TD::make('pronouns'),
-            TD::make('birthday')
-                ->render(function (Member $member) {
-                    if ($member->birthday == null) {
-                        return '';
-                    }
-                    return $member->birthday->format('M d, Y');
-                }),
+            TD::make('displayPronouns'),
+            TD::make('birthday'),
             TD::make('', 'Minecraft Account')
                 ->render(function (Member $member) {
                     $account = $member->minecraftAccounts->pluck('name')->unique()->first();
@@ -97,8 +88,7 @@ class MemberResource extends Resource
             Sight::make('id'),
             Sight::make('name'),
             Sight::make('pronouns'),
-            Sight::make('birthday')
-                ->render(fn (Member $member) => empty($member->birthday) ? '' : $member->birthday->format('M d, Y')),
+            Sight::make('birthday'),
             Sight::make('status'),
             Sight::make('lastseen_at', 'Last Seen')
                 ->popover('The last time our API was able to verify this member in the Discord server.')

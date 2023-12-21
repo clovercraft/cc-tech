@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,7 @@ use Orchid\Screen\AsSource;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Orchid\Filters\Filterable;
+use Orchid\Platform\Concerns\Sortable;
 
 /**
  * Member model
@@ -32,7 +34,7 @@ use Orchid\Filters\Filterable;
  */
 class Member extends Model
 {
-    use HasFactory, AsSource, SoftDeletes, Filterable;
+    use HasFactory, AsSource, SoftDeletes, Filterable, Sortable;
 
     public const STATUS_ACTIVE = 'active';
     public const STATUS_WHITELISTED = 'whitelisted';
@@ -47,9 +49,54 @@ class Member extends Model
     ];
 
     protected $casts = [
-        'birthday' => 'date:Carbon',
         'lastseen_at'   => 'date:Carbon'
     ];
+
+    protected function birthday(): Attribute
+    {
+        return Attribute::make(
+            fn (?string $value) => $value == null ? null : Carbon::parse($value)->format('m/d/Y'),
+            fn ($value) => $value instanceof Carbon ? $value->toDateString() : Carbon::parse($value)->toDateString()
+        );
+    }
+
+    protected function playerTag(): Attribute
+    {
+        return Attribute::make(
+            function ($value, $attributes) {
+                $account = MinecraftAccount::where('member_id', $attributes['id'])->first();
+                return empty($account) ? '' : $account->name;
+            }
+        );
+    }
+
+    protected function displayPronouns(): Attribute
+    {
+        return Attribute::make(
+            function ($value, $attributes) {
+                $options = collect([
+                    'sheher'    => 'She/Her',
+                    'shethey'   => 'She/They',
+                    'theythem'  => 'They/Them',
+                    'hehim'     => 'He/Him',
+                    'hethey'    => 'He/They',
+                    'itits'     => 'It/Its',
+                    'any'       => 'Any Pronouns',
+                ]);
+
+                if (empty($attributes['pronouns'])) {
+                    return '';
+                }
+
+                return $options->get($attributes['pronouns'], $attributes['pronouns']);
+            }
+        );
+    }
+
+    public function getSortColumnName(): string
+    {
+        return 'id';
+    }
 
     public function minecraftAccounts(): HasMany
     {
