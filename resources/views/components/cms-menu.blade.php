@@ -18,7 +18,11 @@
                 </ul>
                 <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('platform.login') }}">HUB Login</a>
+                        @auth
+                            <a class="nav-link" href="{{ route('platform.index') }}">HUB Login</a>
+                        @else
+                            <a class="nav-link" href="{{ route('platform.login') }}">HUB Login</a>
+                        @endauth
                     </li>
                 </ul>
             </div>
