@@ -40,6 +40,6 @@ class MinecraftAccountCreated implements ShouldQueue
 
     public function getActiveWhitelists()
     {
-        return Server::where('whitelist_activated', true)->get();
+        return Server::where('whitelist_activate', true)->get();
     }
 }
