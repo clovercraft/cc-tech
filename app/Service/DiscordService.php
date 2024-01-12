@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Models\AppSetting;
+use App\Models\Member;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -128,6 +129,42 @@ class DiscordService
         return $members;
     }
 
+    public function verify_intro_message(Member $member, ?int $limit = 5): bool
+    {
+        $channel_id = env('DISCORD_INTRO_CHANNEL_ID');
+        $path = sprintf("/channels/%s/messages", $channel_id);
+
+        $perPage = 100;
+        $page = 0;
+        $verified = false;
+        $args = ['limit' => $perPage];
+
+        while ($verified == false && $page < $limit) {
+            $page++;
+            $response = $this->bot_get($path, $args);
+            $entries = $response->collect();
+            $matches = $entries->where('author.id', $member->discord_id);
+            if ($matches->count() >= 1) {
+                $verified = true;
+            }
+        }
+
+        return $verified;
+    }
+
+    public function send_discord_message(string $content)
+    {
+        $channel_id = env('DISCORD_BROADCAST_CHANNEL_ID');
+        $path = sprintf("/channels/%s/messages", $channel_id);
+
+        $args = [
+            'content' => $content,
+        ];
+
+        $response = $this->bot_post($path, $args);
+        return $response->collect();
+    }
+
     private function parseLastUser(Collection $entries): string
     {
         $users = $entries->filter(function ($entry) {
@@ -168,6 +205,14 @@ class DiscordService
         return Http::withToken($token, 'Bot')
             ->withQueryParameters($query_string)
             ->get($uri);
+    }
+
+    private function bot_post(string $path, array $args = []): Response
+    {
+        $uri = $this->request_url($path);
+        $token = env('DISCORD_BOT_TOKEN');
+        return Http::withToken($token, 'Bot')
+            ->post($uri, $args);
     }
 
     private function request_url(string $path = ''): string

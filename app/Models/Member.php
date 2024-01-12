@@ -49,7 +49,8 @@ class Member extends Model
     ];
 
     protected $casts = [
-        'lastseen_at'   => 'date:Carbon'
+        'lastseen_at'       => 'date:Carbon',
+        'intro_verified_at' => 'date:Carbon',
     ];
 
     protected function birthday(): Attribute
