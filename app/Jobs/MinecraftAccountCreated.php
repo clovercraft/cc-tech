@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Facades\Discord;
 use App\Models\MinecraftAccount;
 use App\Models\Server;
 use App\Service\Minecraft\Signals\WhitelistAdd;
@@ -31,10 +32,17 @@ class MinecraftAccountCreated implements ShouldQueue
      */
     public function handle(): void
     {
+        $activated = false;
         foreach ($this->getActiveWhitelists() as $server) {
             WhitelistAdd::make($this->account->name)
                 ->withToken($server->api_key)
                 ->send();
+            $activated = true;
+        }
+        if ($activated) {
+            $member = $this->account->member->discord_id;
+            $message = sprintf("<@%s>, you are now whitelisted!", $member);
+            Discord::send_discord_message($message);
         }
     }
 
