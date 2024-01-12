@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Screens;
 
+use App\Facades\Discord;
 use App\Facades\Minecraft;
 use App\Jobs\MinecraftAccountCreated;
 use App\Models\Member;
@@ -76,7 +77,7 @@ class MemberAccountScreen extends Screen
      */
     public function layout(): iterable
     {
-        return [
+        $layout = [
             Layout::block([
                 Layout::legend('member', [
                     Sight::make('birthday', 'Birthday'),
@@ -92,40 +93,67 @@ class MemberAccountScreen extends Screen
                         ->modal('editBioModal')
                         ->method('updateBio')
                 ]),
-            Layout::block([
-                Layout::table('accounts', [
-                    TD::make('name'),
-                    TD::make('status')
-                ])
-            ])
-                ->title('Minecraft Accounts')
-                ->description('Add one or more Minecraft accounts to be whitelisted on the Clovercraft SMP. You must be the sole owner of these accounts.')
-                ->commands([
-                    ModalToggle::make('Add Minecraft Account')
-                        ->icon('bs.plus')
-                        ->modal('addMinecraftModal')
-                        ->method('addMinecraftAccount'),
-                ]),
-            Layout::modal('addMinecraftModal', [
-                Layout::rows([
-                    Input::make('username')
-                        ->title('Minecraft Account Name')
-                        ->required()
-                        ->help('This must be a Java edition Minecraft username.')
-                ])
-            ])
-                ->title('Add Minecraft Account'),
-            Layout::modal('editBioModal', [
-                Layout::rows([
-                    CustomInput::birthday(),
-                    CustomInput::pronouns(),
-                    TextArea::make('member.bio')
-                        ->title('About Me')
-                        ->help('Optional, tell us a bit about you!')
-                        ->rows(5),
-                ])
-            ])
         ];
+
+        if ($this->member->intro_verified_at == null) {
+            $layout[] = Layout::block(
+                Layout::view('partials.platform.memberAccountVerifyIntro')
+            )
+                ->title('Discord Verification')
+                ->commands([
+                    Button::make('Verify Introduction')
+                        ->icon('bs.eyeglass')
+                        ->method('verifyDiscordIntro')
+                ]);
+        }
+
+        if ($this->member->intro_verified_at == null) {
+            $minecraftAddButton = ModalToggle::make('Add Minecraft Account')
+                ->icon('bs.plus')
+                ->modal('addMinecraftModal')
+                ->method('addMinecraftAccount')
+                ->disabled();
+        } else {
+            $minecraftAddButton = ModalToggle::make('Add Minecraft Account')
+                ->icon('bs.plus')
+                ->modal('addMinecraftModal')
+                ->method('addMinecraftAccount');
+        }
+
+        $layout[] = Layout::block([
+            Layout::table('accounts', [
+                TD::make('name'),
+                TD::make('status')
+            ])
+        ])
+            ->title('Minecraft Accounts')
+            ->description('Add one or more Minecraft accounts to be whitelisted on the Clovercraft SMP. You must be the sole owner of these accounts.')
+            ->commands([
+                $minecraftAddButton
+            ]);
+
+        $layout[] = Layout::modal('addMinecraftModal', [
+            Layout::rows([
+                Input::make('username')
+                    ->title('Minecraft Account Name')
+                    ->required()
+                    ->help('This must be a Java edition Minecraft username.')
+            ])
+        ])
+            ->title('Add Minecraft Account');
+
+        $layout[] = Layout::modal('editBioModal', [
+            Layout::rows([
+                CustomInput::birthday(),
+                CustomInput::pronouns(),
+                TextArea::make('member.bio')
+                    ->title('About Me')
+                    ->help('Optional, tell us a bit about you!')
+                    ->rows(5),
+            ])
+        ]);
+
+        return $layout;
     }
 
     public function addMinecraftAccount(Request $request): void
@@ -170,5 +198,17 @@ class MemberAccountScreen extends Screen
         $this->member->pronouns = $request->input('member.pronouns');
         $this->member->save();
         Toast::success("Bio updated!");
+    }
+
+    public function verifyDiscordIntro(): void
+    {
+        $verified = Discord::verify_intro_message($this->member);
+        if ($verified) {
+            $this->member->intro_verified_at = now();
+            $this->member->save();
+            Toast::success("Introduction verified!");
+        } else {
+            Toast::error("Sorry, we couldn't find your introduction. Contact staff for assistance.");
+        }
     }
 }
