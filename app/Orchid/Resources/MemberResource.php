@@ -6,6 +6,7 @@ use Orchid\Crud\Resource;
 use Orchid\Screen\TD;
 use App\Models\Member;
 use App\Orchid\Filters\MemberHasMinecraftFilter;
+use App\Orchid\Filters\MembersMinecraftName;
 use App\Orchid\Filters\MembersNameFilter;
 use App\Orchid\Filters\MembersStatusFilter;
 use App\Orchid\Inputs\CustomInput;
@@ -47,6 +48,9 @@ class MemberResource extends Resource
             Input::make('status')
                 ->title('Status')
                 ->disabled(),
+            DateTimer::make('intro_verified_at')
+                ->title('Intro Verified Date')
+                ->allowInput()
         ];
     }
 
@@ -59,7 +63,7 @@ class MemberResource extends Resource
     {
         return [
             TD::make('name'),
-            TD::make('displayPronouns'),
+            TD::make('displayPronouns', 'Pronouns'),
             TD::make('birthday'),
             TD::make('', 'Minecraft Account')
                 ->render(function (Member $member) {
@@ -109,6 +113,7 @@ class MemberResource extends Resource
     {
         return [
             MembersNameFilter::class,
+            MembersMinecraftName::class,
             MembersStatusFilter::class,
             MemberHasMinecraftFilter::class,
         ];

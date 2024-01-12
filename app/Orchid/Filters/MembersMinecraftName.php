@@ -2,13 +2,12 @@
 
 namespace App\Orchid\Filters;
 
-use App\Models\Member;
 use Illuminate\Database\Eloquent\Builder;
 use Orchid\Filters\Filter;
 use Orchid\Screen\Field;
-use Orchid\Screen\Fields\Select;
+use Orchid\Screen\Fields\Input;
 
-class MembersStatusFilter extends Filter
+class MembersMinecraftName extends Filter
 {
     /**
      * The displayable name of the filter.
@@ -17,7 +16,7 @@ class MembersStatusFilter extends Filter
      */
     public function name(): string
     {
-        return 'Member Status';
+        return 'Minecraft Name';
     }
 
     /**
@@ -27,7 +26,7 @@ class MembersStatusFilter extends Filter
      */
     public function parameters(): ?array
     {
-        return ['status'];
+        return ['account_name'];
     }
 
     /**
@@ -39,11 +38,10 @@ class MembersStatusFilter extends Filter
      */
     public function run(Builder $builder): Builder
     {
-        $value = $this->request->get('status');
-        if (!empty($value)) {
-            return $builder->where('status', $value);
-        }
-        return $builder;
+        $value = $this->request->get('account_name');
+        return $builder->whereHas('minecraftAccounts', function (Builder $builder) use ($value) {
+            $builder->where('name', 'like', $value);
+        });
     }
 
     /**
@@ -54,15 +52,10 @@ class MembersStatusFilter extends Filter
     public function display(): iterable
     {
         return [
-            Select::make('status')
-                ->options([
-                    ''                          => 'Any',
-                    Member::STATUS_ACTIVE       => 'Active',
-                    Member::STATUS_WHITELISTED  => 'Whitelisted',
-                    Member::STATUS_INACTIVE     => 'Inactive',
-                ])
-                ->value('')
-                ->title('Member Status')
+            Input::make('account_name')
+                ->type('text')
+                ->value($this->request->get('account_name'))
+                ->title('Minecraft Username')
         ];
     }
 }

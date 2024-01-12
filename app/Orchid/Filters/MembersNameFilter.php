@@ -52,7 +52,7 @@ class MembersNameFilter extends Filter
             Input::make('name')
                 ->type('text')
                 ->value($this->request->get('name'))
-                ->title('Name')
+                ->title('Discord Username')
         ];
     }
 }
