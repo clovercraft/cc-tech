@@ -107,7 +107,11 @@ class Member extends Model
     public static function syncFromDiscord(array $user, Carbon $runtime): bool|Member
     {
         $userId = key_exists('id', $user) ? $user['id'] : '';
-        $userName = key_exists('global_name', $user) ? $user['global_name'] : (key_exists('username', $user) ? $user['username'] : '');
+
+        // get the users name, with preference for global name if available
+        $username = key_exists('username', $user) ? $user['username'] : '';
+        $userName = key_exists('global_name', $user) ? $user['global_name'] : $username;
+
         $userAvatar = key_exists('avatar', $user) ? $user['avatar'] : '';
 
         if (empty($userId) || empty($userName)) {
