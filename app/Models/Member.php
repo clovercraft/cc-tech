@@ -115,7 +115,12 @@ class Member extends Model
         $userAvatar = key_exists('avatar', $user) ? $user['avatar'] : '';
 
         if (empty($userId) || empty($userName)) {
-            Log::warning("Could not create Member record for Discord object.", ['discordObj' => $user]);
+            Log::warning("Could not create Member record for Discord object.", [
+                'username'      => $username,
+                'userName'      => $userName,
+                'userId'        => $userId,
+                'discordObj'    => $user,
+            ]);
             return false;
         }
 
