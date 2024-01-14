@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Arr;
 use Orchid\Screen\AsSource;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -109,8 +110,9 @@ class Member extends Model
         $userId = key_exists('id', $user) ? $user['id'] : '';
 
         // get the users name, with preference for global name if available
-        $username = key_exists('username', $user) ? $user['username'] : '';
-        $userName = key_exists('global_name', $user) ? $user['global_name'] : $username;
+        $globalName = Arr::get($user, 'global_name');
+        $username = Arr::get($user, 'username');
+        $userName = empty($globalName) ? $username : $globalName;
 
         $userAvatar = key_exists('avatar', $user) ? $user['avatar'] : '';
 
