@@ -10,8 +10,10 @@ use App\Models\MinecraftAccount;
 use App\Orchid\Inputs\CustomInput;
 use App\Orchid\Inputs\Pronouns;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\DateTimer;
@@ -137,7 +139,7 @@ class MemberAccountScreen extends Screen
                 Input::make('username')
                     ->title('Minecraft Account Name')
                     ->required()
-                    ->help('This must be a Java edition Minecraft username.')
+                    ->help('This must be a Java edition Minecraft username. Minecraft usernames are case sensitive.')
             ])
         ])
             ->title('Add Minecraft Account');
@@ -168,7 +170,17 @@ class MemberAccountScreen extends Screen
         }
 
         $username = $request->input('username');
-        $account = Minecraft::getAccount($username);
+        try {
+            $account = Minecraft::getAccount($username);
+        } catch (Exception $e) {
+            Log::warning("Member attempted to verify invalid Minecraft username", [
+                'id'        => $this->member->id,
+                'member'    => $this->member->name,
+                'username'  => $username
+            ]);
+            Toast::error("Sorry, that account could not be verified. Please try again, or open a support ticket.");
+            return;
+        }
 
         if (MinecraftAccount::where('uuid', $account['id'])->count() > 0) {
             Toast::error("Sorry, that account has already been added to the whitelist.");
