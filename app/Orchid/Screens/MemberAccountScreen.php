@@ -169,6 +169,14 @@ class MemberAccountScreen extends Screen
             return;
         }
 
+        // verify birthday
+        $now = now();
+        $birth = $this->member->birthday;
+        if ($now->diffInYears($birth, true) < 18) {
+            Toast::error("We're sorry. You must be 18 or older to be a member of our community.");
+            return;
+        }
+
         $username = $request->input('username');
         try {
             $account = Minecraft::getAccount($username);
