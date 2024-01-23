@@ -9,9 +9,9 @@ use App\Models\Member;
 use App\Models\MinecraftAccount;
 use App\Orchid\Inputs\CustomInput;
 use App\Orchid\Inputs\Pronouns;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Orchid\Screen\Actions\Button;
@@ -171,7 +171,7 @@ class MemberAccountScreen extends Screen
 
         // verify birthday
         $now = now();
-        $birth = $this->member->birthday;
+        $birth = Carbon::parse($this->member->birthday);
         if ($now->diffInYears($birth, true) < 18) {
             Toast::error("We're sorry. You must be 18 or older to be a member of our community.");
             return;
