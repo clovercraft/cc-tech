@@ -29,6 +29,11 @@
                 <li>Limited time alternative SMPs</li>
                 <li>Clovercraft guilds in other games!</li>
             </ul>
+            <h3>Non-Affiliation Disclaimer</h3>
+            <p>Clovercraft and our volunteer staff team are in no way affiliated with Mojang AB or Microsoft. Clovercraft
+                members may publish their own content from the Clovercraft SMP, given that they comply with the <a
+                    href="https://aka.ms/MCUsageGuidelines" target="_blank">Minecraft Usage Guidelines</a> and <a
+                    href="http://aka.ms/MinecraftEULA" target="_blank">EULA</a>.</p>
         </section>
     </main>
 @endsection
