@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Service\Minecraft\Signals\WhitelistRemove;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -142,5 +143,21 @@ class Member extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function deactivate(): void
+    {
+        $servers = Server::where('whitelist_active', true)->get();
+        $this->status = self::STATUS_INACTIVE;
+        foreach ($this->minecraftAccounts as $account) {
+            $account->status = 'inactive';
+            foreach ($servers as $server) {
+                WhitelistRemove::make($account->name)
+                    ->withToken($server->api_key)
+                    ->send();
+            }
+            $account->whitelisted_at = null;
+            $account->save();
+        }
     }
 }
