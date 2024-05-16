@@ -29,6 +29,11 @@
                 <li>Limited time alternative SMPs</li>
                 <li>Clovercraft guilds in other games!</li>
             </ul>
+            <h3>Contact Our Team</h3>
+            <p>The quickest way to get ahold of our staff team is through our <a href="https://discord.gg/clovercraft"
+                    target="_blank">Discord</a>. If you do not have a Discord account, or need to reach us but cannot join
+                the server, you can <a href="mailto:clovercraftmf@gmail.com" target="_blank">email our team</a> at any time
+                and we will do our best to respond in a timely manner.</p>
             <h3>Non-Affiliation Disclaimer</h3>
             <p>Clovercraft and our volunteer staff team are in no way affiliated with Mojang AB or Microsoft. Clovercraft
                 members may publish their own content from the Clovercraft SMP, given that they comply with the <a
