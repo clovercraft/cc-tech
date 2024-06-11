@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\MemberBanned;
+use App\Listeners\PurgeBannedMember;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -20,7 +22,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         \SocialiteProviders\Manager\SocialiteWasCalled::class => [
             \SocialiteProviders\Discord\DiscordExtendSocialite::class . '@handle',
-        ]
+        ],
+        MemberBanned::class => [
+            PurgeBannedMember::class,
+        ],
     ];
 
     /**
