@@ -126,6 +126,21 @@ class Member extends Model
             return false;
         }
 
+        // check for banned status
+        if (
+            Member::where('discord_id', $userId)
+            ->where('status', 'banned')
+            ->count() > 0
+        ) {
+            Log::info("Attempted to sync banned member account. How did they get in here?", [
+                'username'      => $username,
+                'userName'      => $userName,
+                'userId'        => $userId,
+                'discordObj'    => $user,
+            ]);
+            return false;
+        }
+
         return Member::updateOrCreate(
             [
                 'discord_id'    => $user['id']
