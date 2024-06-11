@@ -13,7 +13,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'pusher/auth',
-        'mcevents/log',
-        'mcevents/global',
+        'mcevent',
     ];
 }

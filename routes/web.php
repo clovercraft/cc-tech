@@ -21,8 +21,12 @@ use Illuminate\Support\Facades\Route;
 Route::controller(FrontController::class)
     ->name('front.')
     ->group(function () {
-        Route::get('/', 'index')->name('home');
+        Route::any('/', 'index')->name('home');
     });
+
+Route::controller(MinecraftApiController::class)->group(function () {
+    Route::get('/mcevent', 'event_hook');
+});
 
 Route::controller(PusherAuthController::class)->group(function () {
     Route::post('/pusher/auth', 'pusher_auth');
@@ -34,8 +38,4 @@ Route::controller(DiscordAuthController::class)->group(function () {
 
     Route::get('/oauth/member/initiate', 'discord_member_auth')->name('discord.authorize-member');
     Route::get('/oauth/member/return', 'discord_member_authorize')->name('discord.redirect-member');
-});
-
-Route::controller(MinecraftApiController::class)->group(function () {
-    Route::post('/mcevents/log', 'event_hook');
 });
