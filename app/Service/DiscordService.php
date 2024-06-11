@@ -14,7 +14,7 @@ use Laravel\Socialite\Facades\Socialite;
 class DiscordService
 {
 
-    private const API_URL = 'https://discord.com/api/';
+    private const API_URL = 'https://discord.com/api/v10';
     private const API_VERSION = 10;
 
     private string $authToken;
@@ -105,7 +105,7 @@ class DiscordService
         return $response->collect();
     }
 
-    public function get_members(): Collection
+    public function get_members(): Collection|bool
     {
         $guild_id = env('DISCORD_GUILD_ID');
         $path = sprintf("/guilds/%s/members", $guild_id);
@@ -118,6 +118,9 @@ class DiscordService
 
         while ($count >= $limit) {
             $response = $this->bot_get($path, $args);
+            if ($response == false) {
+                return false;
+            }
             $entries = $response->collect();
             $members = $members->merge($entries);
             $count = $entries->count();
@@ -142,6 +145,9 @@ class DiscordService
         while ($verified == false && $page < $limit) {
             $page++;
             $response = $this->bot_get($path, $args);
+            if ($response == false) {
+                return false;
+            }
             $entries = $response->collect();
             $matches = $entries->where('author.id', $member->discord_id);
             if ($matches->count() >= 1) {
@@ -162,6 +168,9 @@ class DiscordService
         ];
 
         $response = $this->bot_post($path, $args);
+        if ($response == false) {
+            return collect();
+        }
         return $response->collect();
     }
 
@@ -190,29 +199,59 @@ class DiscordService
         return $this->refreshToken;
     }
 
-    private function get(string $path, array $query_string = []): Response
+    private function get(string $path, array $query_string = []): Response|bool
     {
         $uri = $this->request_url($path);
-        return Http::withToken($this->getAuthToken())
+        $response = Http::withToken($this->getAuthToken())
             ->withQueryParameters($query_string)
             ->get($uri);
+        if ($response->failed()) {
+            Log::warning("Discord API call failed.", [
+                'acting_as' => 'USER',
+                'method'    => 'GET',
+                'uri'       => $uri,
+                'response'  => $response
+            ]);
+            return false;
+        }
+        return $response;
     }
 
-    private function bot_get(string $path, array $query_string = []): Response
+    private function bot_get(string $path, array $query_string = []): Response|bool
     {
         $uri = $this->request_url($path);
         $token = env('DISCORD_BOT_TOKEN');
-        return Http::withToken($token, 'Bot')
+        $response = Http::withToken($token, 'Bot')
             ->withQueryParameters($query_string)
             ->get($uri);
+        if ($response->failed()) {
+            Log::warning("Discord API call failed.", [
+                'acting_as' => 'BOT',
+                'method'    => 'GET',
+                'uri'       => $uri,
+                'response'  => $response
+            ]);
+            return false;
+        }
+        return $response;
     }
 
-    private function bot_post(string $path, array $args = []): Response
+    private function bot_post(string $path, array $args = []): Response|bool
     {
         $uri = $this->request_url($path);
         $token = env('DISCORD_BOT_TOKEN');
-        return Http::withToken($token, 'Bot')
+        $response = Http::withToken($token, 'Bot')
             ->post($uri, $args);
+        if ($response->failed()) {
+            Log::warning("Discord API call failed.", [
+                'acting_as' => 'BOT',
+                'method'    => 'POST',
+                'uri'       => $uri,
+                'response'  => $response
+            ]);
+            return false;
+        }
+        return $response;
     }
 
     private function request_url(string $path = ''): string

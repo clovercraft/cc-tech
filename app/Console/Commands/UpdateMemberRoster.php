@@ -31,6 +31,10 @@ class UpdateMemberRoster extends Command
     {
         $this->info("Pulling roster from Discord");
         $members = Discord::get_members();
+        if ($members == false) {
+            $this->warn("Discord API call failed, aborting.");
+            return Command::FAILURE;
+        }
         $runtime = now();
 
         $this->info("API returned " . $members->count() . " member records");
