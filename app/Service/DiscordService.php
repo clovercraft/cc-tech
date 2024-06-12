@@ -50,13 +50,6 @@ class DiscordService
         // check status
         $authentication = $this->checkAppStatus();
         return $authentication->has('user');
-        if ($authentication->has('user') && $authentication->has('expires')) {
-            $expires = Carbon::parse($authentication->get('expires'));
-            $diff = now()->diffInMinutes($expires, false);
-            return $diff > 0;
-        }
-
-        return false;
     }
 
     public function botInviteLink(): string
