@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Models\AppSetting;
 use App\Models\Member;
+use App\Service\Discord\BotRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -117,7 +118,7 @@ class DiscordService
         $args = ['limit' => 100];
 
         while ($count >= $limit) {
-            $response = $this->bot_get($path, $args);
+            $response = BotRequest::make($path)->get($args);
             if ($response == false) {
                 return false;
             }
@@ -144,7 +145,7 @@ class DiscordService
 
         while ($verified == false && $page < $limit) {
             $page++;
-            $response = $this->bot_get($path, $args);
+            $response = BotRequest::make($path)->get($args);
             if ($response == false) {
                 return false;
             }
@@ -167,11 +168,20 @@ class DiscordService
             'content' => $content,
         ];
 
-        $response = $this->bot_post($path, $args);
+        $response = BotRequest::make($path)->post($args);
         if ($response == false) {
             return collect();
         }
         return $response->collect();
+    }
+
+    public function ban_member(Member $member): bool
+    {
+        // remove member from guild
+
+        // create ban
+
+        return true;
     }
 
     private function parseLastUser(Collection $entries): string
@@ -209,43 +219,6 @@ class DiscordService
             Log::warning("Discord API call failed.", [
                 'acting_as' => 'USER',
                 'method'    => 'GET',
-                'uri'       => $uri,
-                'response'  => $response
-            ]);
-            return false;
-        }
-        return $response;
-    }
-
-    private function bot_get(string $path, array $query_string = []): Response|bool
-    {
-        $uri = $this->request_url($path);
-        $token = env('DISCORD_BOT_TOKEN');
-        $response = Http::withToken($token, 'Bot')
-            ->withQueryParameters($query_string)
-            ->get($uri);
-        if ($response->failed()) {
-            Log::warning("Discord API call failed.", [
-                'acting_as' => 'BOT',
-                'method'    => 'GET',
-                'uri'       => $uri,
-                'response'  => $response
-            ]);
-            return false;
-        }
-        return $response;
-    }
-
-    private function bot_post(string $path, array $args = []): Response|bool
-    {
-        $uri = $this->request_url($path);
-        $token = env('DISCORD_BOT_TOKEN');
-        $response = Http::withToken($token, 'Bot')
-            ->post($uri, $args);
-        if ($response->failed()) {
-            Log::warning("Discord API call failed.", [
-                'acting_as' => 'BOT',
-                'method'    => 'POST',
                 'uri'       => $uri,
                 'response'  => $response
             ]);
