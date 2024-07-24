@@ -122,12 +122,17 @@ class MemberAccountScreen extends Screen
                 ->method('addMinecraftAccount');
         }
 
-        $layout[] = Layout::block([
-            Layout::table('accounts', [
-                TD::make('name'),
-                TD::make('status')
-            ])
-        ])
+        $mcAccountsBlock = [];
+        if ($this->member->minecraftAccounts()->where('status', 'inactive')->count() > 0) {
+            $mcAccountsBlock[] = Layout::view('partials.platform.memberAccountInactive');
+        }
+
+        $mcAccountsBlock[] = Layout::table('accounts', [
+            TD::make('name'),
+            TD::make('status')
+        ]);
+
+        $layout[] = Layout::block($mcAccountsBlock)
             ->title('Minecraft Accounts')
             ->description('Add one or more Minecraft accounts to be whitelisted on the Clovercraft SMP. You must be the sole owner of these accounts.')
             ->commands([
