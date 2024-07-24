@@ -62,9 +62,19 @@ class UpdateMemberRoster extends Command
         // mark users no longer in the roster as inactive
         $expired = DB::table('members')
             ->whereDate('lastseen_at', '<', $runtime)
-            ->update([
-                'status'    => 'inactive'
-            ]);
+            ->get();
+
+        /** @var Member $member */
+        foreach ($expired as $member) {
+            $member->status = 'inactive';
+            if (!empty($member->minecraftAccounts)) {
+                foreach ($member->minecraftAccounts as $account) {
+                    $account->status = 'inactive';
+                    $account->save();
+                }
+            }
+            $member->save();
+        }
 
         $this->info($expired . " accounts have expired from the roster.");
 

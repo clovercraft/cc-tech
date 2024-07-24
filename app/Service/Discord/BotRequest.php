@@ -8,6 +8,10 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * BotRequest Discord API Wrapper
+ *
+ */
 class BotRequest
 {
 
@@ -116,14 +120,22 @@ class BotRequest
         return $this->handleResponse();
     }
 
-    public function put()
+    public function put(?array $args = []): bool
     {
         $this->method = 'PUT';
+        if (!empty($args)) {
+            $this->data($args);
+        }
+
+        $this->response = $this->request->put($this->path);
+        return $this->handleResponse();
     }
 
-    public function delete()
+    public function delete(): bool
     {
         $this->method = 'DELETE';
+        $this->response = $this->request->delete($this->path);
+        return $this->handleResponse();
     }
 
     /**

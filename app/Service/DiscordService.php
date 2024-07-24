@@ -100,9 +100,24 @@ class DiscordService
 
     public function ban_member(Member $member): bool
     {
+        $guild_id = env('DISCORD_GUILD_ID');
+        $member_id = $member->discord_id;
+
         // remove member from guild
+        $path = sprintf("/guilds/%s/members/%s", $guild_id, $member_id);
+        $response = BotRequest::make($path)->delete();
+
+        if ($response == false) {
+            return false;
+        }
 
         // create ban
+        $path = sprintf("/guilds/%s/bans/%s", $guild_id, $member_id);
+        $response = BotRequest::make($path)->put();
+
+        if ($response == false) {
+            return false;
+        }
 
         return true;
     }
