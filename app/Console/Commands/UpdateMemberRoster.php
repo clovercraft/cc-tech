@@ -60,9 +60,7 @@ class UpdateMemberRoster extends Command
         $this->info("All active members updated");
 
         // mark users no longer in the roster as inactive
-        $expired = DB::table('members')
-            ->whereDate('lastseen_at', '<', $runtime)
-            ->get();
+        $expired = Member::whereDate('lastseen_at', '<', $runtime)->get();
 
         /** @var Member $member */
         foreach ($expired as $member) {
@@ -76,7 +74,7 @@ class UpdateMemberRoster extends Command
             $member->save();
         }
 
-        $this->info($expired . " accounts have expired from the roster.");
+        $this->info($expired->count() . " accounts have expired from the roster.");
 
         return Command::SUCCESS;
     }
