@@ -21,4 +21,15 @@ class MinecraftService
         }
         return $data->get('data')['player'];
     }
+
+    public function verifyAccount(string $id): bool
+    {
+        $uri = sprintf("https://playerdb.co/api/player/minecraft/%s", $id);
+        $response = Http::get($uri);
+        if ($response->failed()) {
+            throw new Exception("PlayerDB API call failed.");
+        }
+        $data = $response->collect();
+        return $data->get('code') == 'player.found';
+    }
 }
