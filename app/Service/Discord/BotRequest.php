@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Log;
 class BotRequest
 {
 
-    private const API_URL = 'https://discord.com/api/';
+    private const API_URL = 'https://discord.com/api/v';
     private const API_VERSION = 10;
     private const LOG_PREFIX = '[DISCORD_BOT]';
 
