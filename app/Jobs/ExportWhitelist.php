@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\Middleware\RateLimited;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
@@ -20,6 +21,8 @@ class ExportWhitelist implements ShouldQueue
 
     public $server;
     public $player;
+
+    public $tries = 10;
 
     /**
      * Create a new job instance.
@@ -52,5 +55,10 @@ class ExportWhitelist implements ShouldQueue
 
         $player->whitelisted_at = now();
         $player->save();
+    }
+
+    public function middleware(): array
+    {
+        return [(new RateLimited('exports'))];
     }
 }

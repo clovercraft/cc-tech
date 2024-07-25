@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Jobs\ExportWhitelist;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -33,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
             return Auth::check() && Auth::user()->hasAccess('staff.system');
         });
 
-        RateLimiter::for(ExportWhitelist::class, function (object $job) {
+        RateLimiter::for('exports', function (object $job) {
             return Limit::perMinute(10);
         });
     }
