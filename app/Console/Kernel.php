@@ -15,6 +15,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('cc:update-member-roster')
             ->everyFiveMinutes();
+        $schedule->command('queue:work --stop-when-empty')
+            ->everyFiveMinutes();
     }
 
     /**
