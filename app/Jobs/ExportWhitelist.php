@@ -19,13 +19,15 @@ class ExportWhitelist implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $server;
+    public $player;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(Server $server)
+    public function __construct(Server $server, MinecraftAccount $player)
     {
         $this->server = $server;
+        $this->player = $player;
     }
 
     /**
@@ -34,23 +36,21 @@ class ExportWhitelist implements ShouldQueue
     public function handle(): void
     {
         $token = $this->server->api_key;
+        $player = $this->player;
 
-        $players = MinecraftAccount::where('status', 'active')->get();
-        foreach ($players as $player) {
-            // verify member
-            $account = $player->name;
-            if (!Minecraft::verifyAccount($account)) {
-                Log::warning("Minecraft user failed verification during export", ['account' => $player]);
-                continue;
-            }
-
-            // send whitelist signal
-            WhitelistAdd::make($player->name)
-                ->withToken($token)
-                ->send();
-
-            $player->whitelisted_at = now();
-            $player->save();
+        // verify member
+        $account = $player->name;
+        if (!Minecraft::verifyAccount($account)) {
+            Log::warning("Minecraft user failed verification during export", ['account' => $player]);
+            return;
         }
+
+        // send whitelist signal
+        WhitelistAdd::make($player->name)
+            ->withToken($token)
+            ->send();
+
+        $player->whitelisted_at = now();
+        $player->save();
     }
 }

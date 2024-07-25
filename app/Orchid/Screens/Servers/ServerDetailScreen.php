@@ -3,6 +3,7 @@
 namespace App\Orchid\Screens\Servers;
 
 use App\Jobs\ExportWhitelist;
+use App\Models\MinecraftAccount;
 use App\Models\Plugin;
 use App\Models\Server;
 use App\Orchid\Layouts\Plugins\PluginsTableLayout;
@@ -139,8 +140,11 @@ class ServerDetailScreen extends Screen
         $this->server->save();
 
         if ($whitelist && $export) {
-            ExportWhitelist::dispatchSync($this->server);
-            Toast::success("Whitelist has been exported!");
+            $players = MinecraftAccount::where('status', 'active')->get();
+            foreach ($players as $player) {
+                ExportWhitelist::dispatch($this->server, $player);
+            }
+            Toast::success("Whitelist export has been queued!");
         }
     }
 }
