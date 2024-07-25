@@ -50,7 +50,6 @@ class ExportWhitelist implements ShouldQueue
                 ->send();
 
             $player->whitelisted_at = now();
-            $player->status = 'whitelisted';
             $player->save();
         }
     }
